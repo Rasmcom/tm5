@@ -400,63 +400,70 @@
             }
         }
 
-        function savePDF() {
-            const { jsPDF } = window.jspdf;
-            const content = document.getElementById('record-page');
-            const controls = document.querySelectorAll('.no-print');
+function savePDF() {
+    // إظهار رسالة للمستخدم بأن العمل جارٍ
+    const saveButton = event.target;
+    saveButton.textContent = 'جاري الحفظ...';
+    saveButton.disabled = true;
 
-            // إخفاء عناصر التحكم قبل التقاط الصورة
-            controls.forEach(el => el.style.display = 'none');
+    const { jsPDF } = window.jspdf;
+    const content = document.getElementById('record-page');
+    const controls = document.querySelectorAll('.no-print');
 
-            html2canvas(content, {
-                scale: 2, // زيادة الدقة
-                useCORS: true, // للسماح بتحميل الصور من مصادر خارجية
-                logging: true,
-                width: content.scrollWidth,
-                height: content.scrollHeight
-            }).then(canvas => {
-                // إعادة إظهار عناصر التحكم بعد التقاط الصورة
-                controls.forEach(el => el.style.display = '');
+    // إخفاء الأزرار وعناصر التحكم قبل التقاط الصورة
+    controls.forEach(el => el.style.visibility = 'hidden');
 
-                const imgData = canvas.toDataURL('image/png');
-                
-                // A4 landscape dimensions in mm: 297 x 210
-                const pdfWidth = 297;
-                const pdfHeight = 210;
+    html2canvas(content, {
+        scale: 2, // لزيادة جودة الصورة
+        useCORS: true,
+        width: content.scrollWidth,  // التقاط العرض الكامل للمحتوى
+        height: content.scrollHeight // التقاط الارتفاع الكامل للمحتوى
+    })
+    .then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const doc = new jsPDF({
+            orientation: 'landscape', // صفحة عرضية
+            unit: 'mm',
+            format: 'a4' // حجم A4
+        });
 
-                const doc = new jsPDF({
-                    orientation: 'landscape',
-                    unit: 'mm',
-                    format: 'a4'
-                });
+        const pdfWidth = doc.internal.pageSize.getWidth(); // عرض صفحة PDF
+        const pdfHeight = doc.internal.pageSize.getHeight(); // ارتفاع صفحة PDF
 
-                const canvasWidth = canvas.width;
-                const canvasHeight = canvas.height;
-                const ratio = canvasWidth / canvasHeight;
-                
-                let imgWidth = pdfWidth;
-                let imgHeight = imgWidth / ratio;
+        const imgProps = doc.getImageProperties(imgData);
+        const imgRatio = imgProps.width / imgProps.height;
 
-                // إذا كان الارتفاع المحسوب أكبر من ارتفاع الصفحة، نضبطه و نعيد حساب العرض
-                if (imgHeight > pdfHeight) {
-                    imgHeight = pdfHeight;
-                    imgWidth = imgHeight * ratio;
-                }
+        let finalImgWidth = pdfWidth;
+        let finalImgHeight = finalImgWidth / imgRatio;
 
-                const x = (pdfWidth - imgWidth) / 2;
-                const y = (pdfHeight - imgHeight) / 2;
-
-                doc.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
-                
-                const schoolName = document.getElementById('school-name').value || 'المدرسة';
-                const month = document.getElementById('month-input').value || 'الشهر';
-                doc.save(`سجل متابعة - ${schoolName} - ${month}.pdf`);
-            }).catch(err => {
-                console.error("Error generating PDF:", err);
-                // تأكد من إعادة إظهار عناصر التحكم حتى لو حدث خطأ
-                controls.forEach(el => el.style.display = '');
-            });
+        // التأكد من أن الصورة لا تتجاوز ارتفاع الصفحة
+        if (finalImgHeight > pdfHeight) {
+            finalImgHeight = pdfHeight;
+            finalImgWidth = finalImgHeight * imgRatio;
         }
+
+        // إضافة الصورة في منتصف الصفحة
+        const xPos = (pdfWidth - finalImgWidth) / 2;
+        const yPos = (pdfHeight - finalImgHeight) / 2;
+        doc.addImage(imgData, 'PNG', xPos, yPos, finalImgWidth, finalImgHeight);
+
+        // حفظ الملف
+        const school = document.getElementById('school-name').value || 'المدرسة';
+        const month = document.getElementById('month-input').value || 'الشهر';
+        doc.save(`سجل متابعة - ${school} - ${month}.pdf`);
+    })
+    .catch(err => {
+        // في حال حدوث خطأ، طباعة الخطأ في الكونسول
+        console.error("حدث خطأ أثناء إنشاء ملف PDF:", err);
+    })
+    .finally(() => {
+        // إعادة إظهار كل شيء بعد انتهاء العملية (سواء نجحت أم فشلت)
+        controls.forEach(el => el.style.visibility = 'visible');
+        saveButton.textContent = 'حفظ PDF';
+        saveButton.disabled = false;
+    });
+}
+
 
         window.onload = function() {
             const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
