@@ -8,468 +8,177 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        /* --- أنماط CSS تبقى كما هي --- */
-        @page {
-            size: A4 landscape;
-            margin: 0;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100% );
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #2c5aa0 0%, #1e3a5f 100%);
-            padding: 20px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 20px;
-        }
-        
-        .logo {
-            width: 80px;
-            height: auto;
-        }
-
-        .input-section {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .input-section input {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: 'Cairo', sans-serif;
-        }
-        
-        .title-section {
-            padding: 20px;
-            text-align: center;
-            background: #f8f9fa;
-        }
-        
-        .gender-selection {
-            margin-bottom: 15px;
-        }
-        
-        .gender-btn {
-            padding: 10px 20px;
-            border: 2px solid #2c5aa0;
-            background: white;
-            color: #2c5aa0;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .gender-btn.active {
-            background: #2c5aa0;
-            color: white;
-        }
-        
-        .main-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #333;
-        }
-        
-        .month-input {
-            border: none;
-            border-bottom: 2px solid #2c5aa0;
-            background: transparent;
-            font-size: 26px;
-            font-weight: 700;
-            color: #2c5aa0;
-            text-align: center;
-            width: 150px;
-        }
-        
-        .controls {
-            padding: 20px;
-            background: #f8f9fa;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .names-input {
-            flex: 1;
-        }
-        
-        .names-input textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            min-height: 100px;
-        }
-        
-        .btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-        
+        @page { size: A4 landscape; margin: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100% ); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #2c5aa0 0%, #1e3a5f 100%); padding: 30px; color: white; display: flex; align-items: center; justify-content: flex-start; flex-wrap: nowrap; gap: 30px; }
+        .logo { width: 100px; height: auto; }
+        .input-section { display: flex; flex-direction: column; gap: 8px; min-width: 250px; }
+        .input-section input { padding: 8px 12px; border: none; border-radius: 6px; font-size: 14px; font-weight: 700; background: rgba(255,255,255,0.95); color: #333; height: 35px; }
+        .title-section { padding: 30px; text-align: center; background: #f8f9fa; border-bottom: 3px solid #2c5aa0; }
+        .gender-selection { margin-bottom: 25px; display: flex; justify-content: center; gap: 20px; }
+        .gender-btn { padding: 15px 30px; border: 2px solid #2c5aa0; background: white; color: #2c5aa0; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.3s ease; }
+        .gender-btn.active { background: #2c5aa0; color: white; }
+        .main-title { font-size: 32px; font-weight: 700; color: #333; margin-bottom: 10px; }
+        .month-input { display: inline-block; border: none; border-bottom: 3px solid #2c5aa0; background: transparent; font-size: 28px; font-weight: 700; color: #2c5aa0; text-align: center; min-width: 150px; padding: 8px; }
+        .controls { padding: 25px 30px; background: #f8f9fa; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; }
+        .names-input { flex: 1; min-width: 350px; }
+        .names-input label { display: block; margin-bottom: 12px; font-weight: 600; font-size: 16px; color: #333; }
+        .names-input textarea { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; resize: vertical; min-height: 120px; }
+        .btn { padding: 15px 30px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.3s ease; }
         .btn-primary { background: #2c5aa0; color: white; }
-        .btn-primary:hover { background: #1e3a5f; }
         .btn-success { background: #28a745; color: white; }
-        .btn-success:hover { background: #218838; }
-        
-        .table-container {
-            padding: 20px;
-            overflow-x: auto;
-        }
-        
-        .main-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-        }
-        
-        .main-table th, .main-table td {
-            border: 1px solid #333;
-            padding: 5px;
-            text-align: center;
-            vertical-align: middle;
-        }
-        
-        .main-table th {
-            font-weight: 600;
-            color: white;
-            font-size: 10px;
-        }
-        
-        .col-number { background: #6c757d; }
-        .col-name { background: #495057; }
-        .col-elearning { background: #007bff; }
-        .col-elearning-sub { background: #66b3ff; }
-        .col-elearning-subsub { background: #b3d9ff; color: #1e3a5f !important; }
-        .col-commitment { background: #28a745; }
-        .col-commitment-sub { background: #66d966; }
-        .col-growth { background: #ffc107; color: #333; }
-        .col-growth-sub { background: #ffdb66; color: #333; }
-        .col-achievement { background: #dc3545; }
-        .col-achievement-sub { background: #ff6b7a; }
-        .col-achievement-subsub { background: #ffb3ba; }
-        .col-signature { background: #6f42c1; }
-        
-        .main-table input[type="number"], .main-table input[type="text"] {
-            width: 95%;
-            padding: 4px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            text-align: center;
-            font-size: 11px;
-        }
-        
-        .check-cell {
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        .footer {
-            padding: 20px;
-            background: #f8f9fa;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-        
-        .signature-box input {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            width: 250px;
-            text-align: center;
-        }
-        
-        .no-print {
-            /* This class is used to hide elements during PDF generation */
-        }
+        .btn-group { display: flex; flex-direction: column; gap: 15px; }
+        .table-container { padding: 30px; overflow-x: auto; }
+        .main-table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; }
+        .main-table th, .main-table td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
+        .main-table th { font-weight: 600; color: white; font-size: 12px; }
+        .col-number { background: #6c757d; } .col-name { background: #495057; } .col-elearning { background: #007bff; } .col-elearning-sub { background: #66b3ff; } .col-elearning-subsub { background: #b3d9ff; } .col-commitment { background: #28a745; } .col-commitment-sub { background: #66d966; } .col-growth { background: #ffc107; color: #333; } .col-growth-sub { background: #ffdb66; color: #333; } .col-achievement { background: #dc3545; } .col-achievement-sub { background: #ff6b7a; } .col-achievement-subsub { background: #ffb3ba; } .col-signature { background: #6f42c1; }
+        .main-table input[type="number"] { width: 70px; padding: 8px; border: 1px solid #ddd; border-radius: 5px; text-align: center; font-size: 14px; }
+        .main-table input[type="text"] { width: 140px; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .check-cell { cursor: pointer; font-size: 18px; padding: 12px; min-width: 50px; }
+        .footer { padding: 30px; background: #f8f9fa; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 30px; }
+        .signature-box { display: flex; flex-direction: column; gap: 15px; min-width: 300px; align-items: center; }
+        .signature-input { display: flex; align-items: center; gap: 15px; width: 100%; }
+        .signature-input input { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: 700; }
     </style>
 </head>
 <body>
     <div class="container" id="record-page">
-        <!-- Header -->
         <div class="header">
-            <img src="https://salogos.org/wp-content/uploads/2021/11/UntiTtled-1-1300x988.png" alt="شعار وزارة التعليم" class="logo">
+            <div class="logo-section"><img src="https://salogos.org/wp-content/uploads/2021/11/UntiTtled-1-1300x988.png" alt="شعار وزارة التعليم" class="logo"></div>
             <div class="input-section">
-                <input type="text" id="education-dept" placeholder="الإدارة التعليمية">
-                <input type="text" id="school-name" placeholder="المدرسة">
+                <input type="text" id="education-dept" placeholder="أدخل الإدارة التعليمية">
+                <input type="text" id="education-region" placeholder="أدخل المنطقة التعليمية">
+                <input type="text" id="school-name" placeholder="أدخل المدرسة">
             </div>
         </div>
-        
-        <!-- Title Section -->
         <div class="title-section">
             <div class="gender-selection no-print">
                 <button class="gender-btn active" onclick="selectGender('male', event )">معلم</button>
                 <button class="gender-btn" onclick="selectGender('female', event)">معلمة</button>
             </div>
-            <h1 class="main-title" id="main-title">
-                سجل متابعة المعلم خلال شهر <input type="text" class="month-input" id="month-input">
-            </h1>
+            <div class="main-title" id="main-title">سجل متابعة المعلم للعام الدراسي خلال شهر <input type="text" class="month-input" id="month-input" placeholder="الشهر"></div>
         </div>
-        
-        <!-- Controls -->
         <div class="controls no-print">
             <div class="names-input">
-                <label for="names-textarea">لصق أسماء المعلمين:</label>
-                <textarea id="names-textarea" placeholder="1- اسم المعلم الأول...&#10;2- اسم المعلم الثاني..."></textarea>
+                <label>الصق بيانات المعلمين/المعلمات هنا:</label>
+                <textarea id="names-textarea" placeholder="1- أحمد محمد..."></textarea>
             </div>
             <div class="btn-group">
                 <button class="btn btn-primary" onclick="extractNames()">استخراج الأسماء</button>
-                <button class="btn btn-success" onclick="savePDF()">حفظ PDF</button>
+                <button class="btn btn-success" onclick="savePDF(event)">حفظ PDF</button>
             </div>
         </div>
-        
-        <!-- Table -->
         <div class="table-container">
             <table class="main-table" id="main-table">
                 <thead>
                     <tr>
-                        <th rowspan="3" class="col-number">م</th>
-                        <th rowspan="3" class="col-name" id="name-column-header">اسم المعلم</th>
-                        <th colspan="6" class="col-elearning">التعليم الإلكتروني</th>
-                        <th colspan="5" class="col-commitment">الالتزام الوظيفي</th>
-                        <th colspan="5" class="col-growth">النمو المهني</th>
-                        <th colspan="7" class="col-achievement">التحصيل الدراسي</th>
-                        <th rowspan="3" class="col-signature">التوقيع</th>
+                        <th rowspan="3" class="col-number">م</th><th rowspan="3" class="col-name" id="name-column-header">اسم المعلم</th><th colspan="6" class="col-elearning">التعليم الإلكتروني (مدرستي)</th><th colspan="5" class="col-commitment">معايير الالتزام الوظيفي</th><th colspan="5" class="col-growth">معايير النمو المهني</th><th colspan="7" class="col-achievement">متابعة التحصيل الدراسي</th><th rowspan="3" class="col-signature">توقيع المعلم/ـة</th>
                     </tr>
                     <tr>
-                        <th colspan="2" class="col-elearning-sub">تحضير الدروس</th>
-                        <th rowspan="2" class="col-elearning-sub">الأنشطة</th>
-                        <th rowspan="2" class="col-elearning-sub">الاختبارات</th>
-                        <th rowspan="2" class="col-elearning-sub">دروس معدة</th>
-                        <th rowspan="2" class="col-elearning-sub">دروس غير معدة</th>
-                        <th rowspan="2" class="col-commitment-sub">الدوام</th>
-                        <th rowspan="2" class="col-commitment-sub">زمن الحصص</th>
-                        <th rowspan="2" class="col-commitment-sub">المشاركة</th>
-                        <th rowspan="2" class="col-commitment-sub">البيئة</th>
-                        <th rowspan="2" class="col-commitment-sub">التعاون</th>
-                        <th rowspan="2" class="col-growth-sub">مجتمع مهني</th>
-                        <th rowspan="2" class="col-growth-sub">زيارة تبادلية</th>
-                        <th rowspan="2" class="col-growth-sub">ورشة عمل</th>
-                        <th rowspan="2" class="col-growth-sub">درس تطبيقي</th>
-                        <th rowspan="2" class="col-growth-sub">استراتيجيات</th>
-                        <th rowspan="2" class="col-achievement-sub">تشخيصية</th>
-                        <th rowspan="2" class="col-achievement-sub">تحليل</th>
-                        <th rowspan="2" class="col-achievement-sub">خطط علاجية</th>
-                        <th colspan="4" class="col-achievement-sub">أساليب التقويم</th>
+                        <th colspan="2" class="col-elearning-sub">تحضير الدروس</th><th rowspan="2" class="col-elearning-sub">عدد الأنشطة</th><th rowspan="2" class="col-elearning-sub">الاختبارات</th><th rowspan="2" class="col-elearning-sub">الدروس المعدة</th><th rowspan="2" class="col-elearning-sub">غير المعدة</th><th rowspan="2" class="col-commitment-sub">أوقات الدوام</th><th rowspan="2" class="col-commitment-sub">زمن الحصص</th><th rowspan="2" class="col-commitment-sub">المشاركة</th><th rowspan="2" class="col-commitment-sub">البيئة</th><th rowspan="2" class="col-commitment-sub">التعاون</th><th rowspan="2" class="col-growth-sub">مجتمع مهني</th><th rowspan="2" class="col-growth-sub">زيارة تبادلية</th><th rowspan="2" class="col-growth-sub">ورشة عمل</th><th rowspan="2" class="col-growth-sub">درس تطبيقي</th><th rowspan="2" class="col-growth-sub">استراتيجيات</th><th rowspan="2" class="col-achievement-sub">التشخيصية</th><th rowspan="2" class="col-achievement-sub">تحليل النتائج</th><th rowspan="2" class="col-achievement-sub">الخطط العلاجية</th><th colspan="4" class="col-achievement-sub">تنوع التقويم</th>
                     </tr>
                     <tr>
-                        <th class="col-elearning-subsub">ملائم</th>
-                        <th class="col-elearning-subsub">مستوفي</th>
-                        <th class="col-achievement-subsub">قصيرة</th>
-                        <th class="col-achievement-subsub">إنجاز</th>
-                        <th class="col-achievement-subsub">واجبات</th>
-                        <th class="col-achievement-subsub">مشاريع</th>
+                        <th class="col-elearning-subsub" style="color: #1e3a5f;">ملائم للخطة</th><th class="col-elearning-subsub" style="color: #1e3a5f;">مستوفي العناصر</th><th class="col-achievement-subsub">قصيرة</th><th class="col-achievement-subsub">ملف الإنجاز</th><th class="col-achievement-subsub">واجبات</th><th class="col-achievement-subsub">مشاريع</th>
                     </tr>
                 </thead>
-                <tbody id="table-body">
-                    <!-- Rows will be added here -->
-                </tbody>
+                <tbody id="table-body"></tbody>
             </table>
         </div>
-        
-        <!-- Footer -->
         <div class="footer">
             <div class="signature-box">
-                <input type="text" id="right-title" placeholder="الصفة">
-                <input type="text" id="right-name" placeholder="الاسم">
+                <div class="signature-input"><input type="text" placeholder="الصفة"></div>
+                <div class="signature-input"><input type="text" placeholder="الاسم"></div>
             </div>
             <div class="signature-box">
-                <input type="text" id="left-title" placeholder="الصفة">
-                <input type="text" id="left-name" placeholder="الاسم">
+                <div class="signature-input"><input type="text" placeholder="الصفة"></div>
+                <div class="signature-input"><input type="text" placeholder="الاسم"></div>
             </div>
         </div>
     </div>
-
     <script>
         let rowCounter = 0;
 
         function selectGender(gender, event) {
             document.querySelectorAll('.gender-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
             const title = document.getElementById('main-title');
             const columnHeader = document.getElementById('name-column-header');
             const monthInput = document.getElementById('month-input');
-            
             if (gender === 'male') {
-                title.childNodes[0].nodeValue = 'سجل متابعة المعلم خلال شهر ';
+                title.childNodes[0].nodeValue = 'سجل متابعة المعلم للعام الدراسي خلال شهر ';
                 columnHeader.textContent = 'اسم المعلم';
             } else {
-                title.childNodes[0].nodeValue = 'سجل متابعة المعلمات خلال شهر ';
+                title.childNodes[0].nodeValue = 'سجل متابعة المعلمات للعام الدراسي خلال شهر ';
                 columnHeader.textContent = 'اسم المعلمة';
             }
         }
 
         function extractNames() {
-            const textarea = document.getElementById('names-textarea');
-            const lines = textarea.value.split('\n').filter(line => line.trim() !== '');
+            const lines = document.getElementById('names-textarea').value.split('\n').filter(line => line.trim() !== '');
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
             rowCounter = 0;
-            
             lines.forEach(line => {
-                // Simple extraction: remove numbers and dashes from the start
                 const name = line.replace(/^[0-9\s\-\.]*/, '').trim();
-                if (name) {
-                    addTableRow(name);
-                }
+                if (name) addTableRow(name);
             });
-            textarea.value = '';
         }
 
         function addTableRow(name) {
             rowCounter++;
-            const tbody = document.getElementById('table-body');
-            const row = document.createElement('tr');
-            
-            row.innerHTML = `
-                <td>${rowCounter}</td>
-                <td><input type="text" value="${name}"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td><input type="number" min="0"></td>
-                <td><input type="number" min="0"></td>
-                <td><input type="number" min="0"></td>
-                <td><input type="number" min="0"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td><input type="text"></td>
-            `;
-            tbody.appendChild(row);
+            const row = document.getElementById('table-body').insertRow();
+            row.innerHTML = `<td>${rowCounter}</td><td><input type="text" value="${name}"></td>` + '<td class="check-cell" onclick="toggleCheck(this)"></td>'.repeat(2) + '<td><input type="number" min="0" value="0"></td>'.repeat(4) + '<td class="check-cell" onclick="toggleCheck(this)"></td>'.repeat(11) + '<td><input type="text"></td>';
         }
 
         function toggleCheck(cell) {
-            const states = ['', '✅', '❌'];
-            let currentStateIndex = states.indexOf(cell.textContent.trim());
-            let nextStateIndex = (currentStateIndex + 1) % states.length;
-            cell.textContent = states[nextStateIndex];
-            
-            cell.style.backgroundColor = '';
-            if (states[nextStateIndex] === '✅') {
-                cell.style.backgroundColor = '#d4edda';
-            } else if (states[nextStateIndex] === '❌') {
-                cell.style.backgroundColor = '#f8d7da';
-            }
+            const current = cell.textContent.trim();
+            if (current === '') { cell.textContent = '✅'; }
+            else if (current === '✅') { cell.textContent = '❌'; }
+            else { cell.textContent = ''; }
         }
 
-function savePDF() {
-    // إظهار رسالة للمستخدم بأن العمل جارٍ
-    const saveButton = event.target;
-    saveButton.textContent = 'جاري الحفظ...';
-    saveButton.disabled = true;
+        function savePDF(event) {
+            const saveButton = event.target;
+            saveButton.textContent = 'جاري الحفظ...';
+            saveButton.disabled = true;
 
-    const { jsPDF } = window.jspdf;
-    const content = document.getElementById('record-page');
-    const controls = document.querySelectorAll('.no-print');
+            const { jsPDF } = window.jspdf;
+            const content = document.getElementById('record-page');
+            document.querySelectorAll('.no-print').forEach(el => el.style.visibility = 'hidden');
 
-    // إخفاء الأزرار وعناصر التحكم قبل التقاط الصورة
-    controls.forEach(el => el.style.visibility = 'hidden');
-
-    html2canvas(content, {
-        scale: 2, // لزيادة جودة الصورة
-        useCORS: true,
-        width: content.scrollWidth,  // التقاط العرض الكامل للمحتوى
-        height: content.scrollHeight // التقاط الارتفاع الكامل للمحتوى
-    })
-    .then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const doc = new jsPDF({
-            orientation: 'landscape', // صفحة عرضية
-            unit: 'mm',
-            format: 'a4' // حجم A4
-        });
-
-        const pdfWidth = doc.internal.pageSize.getWidth(); // عرض صفحة PDF
-        const pdfHeight = doc.internal.pageSize.getHeight(); // ارتفاع صفحة PDF
-
-        const imgProps = doc.getImageProperties(imgData);
-        const imgRatio = imgProps.width / imgProps.height;
-
-        let finalImgWidth = pdfWidth;
-        let finalImgHeight = finalImgWidth / imgRatio;
-
-        // التأكد من أن الصورة لا تتجاوز ارتفاع الصفحة
-        if (finalImgHeight > pdfHeight) {
-            finalImgHeight = pdfHeight;
-            finalImgWidth = finalImgHeight * imgRatio;
+            html2canvas(content, {
+                scale: 2,
+                useCORS: true,
+                width: content.scrollWidth,
+                height: content.scrollHeight
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+                const pdfWidth = doc.internal.pageSize.getWidth();
+                const pdfHeight = doc.internal.pageSize.getHeight();
+                const imgProps = doc.getImageProperties(imgData);
+                const ratio = imgProps.width / imgProps.height;
+                let finalWidth = pdfWidth;
+                let finalHeight = finalWidth / ratio;
+                if (finalHeight > pdfHeight) {
+                    finalHeight = pdfHeight;
+                    finalWidth = finalHeight * ratio;
+                }
+                doc.addImage(imgData, 'PNG', (pdfWidth - finalWidth) / 2, (pdfHeight - finalHeight) / 2, finalWidth, finalHeight);
+                doc.save('سجل-المتابعة.pdf');
+            }).finally(() => {
+                document.querySelectorAll('.no-print').forEach(el => el.style.visibility = 'visible');
+                saveButton.textContent = 'حفظ PDF';
+                saveButton.disabled = false;
+            });
         }
-
-        // إضافة الصورة في منتصف الصفحة
-        const xPos = (pdfWidth - finalImgWidth) / 2;
-        const yPos = (pdfHeight - finalImgHeight) / 2;
-        doc.addImage(imgData, 'PNG', xPos, yPos, finalImgWidth, finalImgHeight);
-
-        // حفظ الملف
-        const school = document.getElementById('school-name').value || 'المدرسة';
-        const month = document.getElementById('month-input').value || 'الشهر';
-        doc.save(`سجل متابعة - ${school} - ${month}.pdf`);
-    })
-    .catch(err => {
-        // في حال حدوث خطأ، طباعة الخطأ في الكونسول
-        console.error("حدث خطأ أثناء إنشاء ملف PDF:", err);
-    })
-    .finally(() => {
-        // إعادة إظهار كل شيء بعد انتهاء العملية (سواء نجحت أم فشلت)
-        controls.forEach(el => el.style.visibility = 'visible');
-        saveButton.textContent = 'حفظ PDF';
-        saveButton.disabled = false;
-    });
-}
-
 
         window.onload = function() {
-            const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
-                          'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
-            const currentMonth = new Date().getMonth();
-            document.getElementById('month-input').value = months[currentMonth];
+            const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+            document.getElementById('month-input').value = months[new Date().getMonth()];
         };
     </script>
 </body>
