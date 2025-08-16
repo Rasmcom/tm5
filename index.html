@@ -536,14 +536,14 @@
             background: #2c5aa0;
             color: white;
             padding: 8mm;
-            margin-bottom: 5mm;
+            margin-bottom: 2mm; /* Reduced margin */
         }
 
         .pdf-title {
             text-align: center;
             background: #f8f9fa;
             padding: 8mm;
-            margin-bottom: 5mm;
+            margin-bottom: 2mm; /* Reduced margin */
             font-size: 18px;
             font-weight: bold;
         }
@@ -551,8 +551,8 @@
         .pdf-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 8px;
-            margin-bottom: 5mm;
+            font-size: 7px; /* Reduced font size for sub-columns */
+            margin-bottom: 2mm; /* Reduced margin */
         }
 
         .pdf-table th,
@@ -574,7 +574,7 @@
             gap: 50px;
             background: #f8f9fa;
             padding: 8mm;
-            margin-top: 5mm;
+            margin-top: 2mm; /* Reduced margin */
         }
         
         @media (max-width: 768px) {
@@ -654,8 +654,8 @@
             </div>
             <div class="btn-group">
                 <button class="btn btn-primary" onclick="extractNames()">استخراج الأسماء</button>
-                <button class="btn btn-success" onclick="window.print()">🖨️ طباعة مباشرة</button>
                 <button class="btn btn-warning" onclick="generatePDF()">📄 تحويل إلى PDF</button>
+                <button class="btn btn-success" onclick="window.print()">🖨️ طباعة مباشرة</button>
             </div>
         </div>
         
@@ -755,21 +755,6 @@
             }
         }
 
-        function extractFirstAndLast(fullName) {
-            // إزالة المسافات الزائدة
-            fullName = fullName.trim();
-            
-            // تقسيم النص باستخدام المسافة
-            let parts = fullName.split(/\s+/);
-
-            // الاحتفاظ فقط بأول وآخر كلمة
-            if (parts.length >= 2) {
-                return parts[0] + " " + parts[parts.length - 1];
-            } else {
-                return fullName; // إذا الاسم كلمة واحدة
-            }
-        }
-
         function cleanAndExtractName(text) {
             // إزالة الأرقام والرموز
             let cleaned = text.replace(/[0-9\-\:\.\،\,\(\)\[\]\/\\]/g, ' ');
@@ -799,11 +784,8 @@
                 return /^[\u0600-\u06FF]+$/.test(word) && word.length >= 2;
             });
             
-            if (words.length >= 4) {
-                // الاسم الأول + مسافة + الاسم الرابع (حذف الثاني والثالث)
-                return words[0] + " " + words[3];
-            } else if (words.length >= 2) {
-                // الاسم الأول + الأخير
+            // تعديل لاستخراج الاسم الأول والأخير فقط
+            if (words.length >= 2) {
                 return words[0] + " " + words[words.length - 1];
             } else if (words.length === 1) {
                 return words[0];
@@ -911,9 +893,9 @@
             pageDiv.innerHTML = `
                 <div class="pdf-header">
                     <div style="display: flex; flex-direction: column; gap: 5px; font-size: 10px;">
-                        <div>${educationDept}</div>
-                        <div>${educationRegion}</div>
-                        <div>${schoolName}</div>
+                        <div>الإدارة التعليمية: ${educationDept}</div>
+                        <div>المنطقة التعليمية: ${educationRegion}</div>
+                        <div>المدرسة: ${schoolName}</div>
                     </div>
                     <div style="display: flex; justify-content: center; align-items: center;">
                         <img src="https://salogos.org/wp-content/uploads/2021/11/UntiTtled-1-1300x988.png" alt="شعار وزارة التعليم" style="width: 60px; height: auto;">
@@ -992,9 +974,9 @@
                 </table>
                 
                 <div class="pdf-footer">
-                    <div style="text-align: center;">
-                        <div style="margin-bottom: 10px; font-weight: bold;">${signatureTitle}</div>
-                        <div style="border-bottom: 2px solid #333; width: 200px; padding-bottom: 5px;">${signatureName}</div>
+                    <div style="text-align: center; font-size: 8px;">
+                        <div style="margin-bottom: 5px; font-weight: bold;">${signatureTitle}</div>
+                        <div style="border-bottom: 1px solid #333; width: 150px; padding-bottom: 2px;">${signatureName}</div>
                     </div>
                 </div>
             `;
