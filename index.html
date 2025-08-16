@@ -5,26 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سجل متابعة المعلمين</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        /* أنماط الطباعة لورقة A4 أفقية */
         @page {
             size: A4 landscape;
-            margin: 8mm;
+            margin: 0.5in;
         }
-
-        /* أنماط خاصة بالطباعة فقط */
+        
         @media print {
             .no-print { display: none !important; }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
             
             html, body {
                 width: 100% !important;
                 height: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                background: #f0f0f0 !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                overflow: hidden;
+                background: white !important;
+                font-size: 12px !important;
             }
             
             .container {
@@ -35,126 +38,119 @@
                 box-shadow: none !important;
                 border-radius: 0 !important;
                 background: white !important;
-                transform: scale(1) !important;
-                transform-origin: top left !important;
+                page-break-inside: avoid !important;
             }
-
-            /* تنسيق الرأس عند الطباعة */
+            
             .header {
-                padding: 3mm !important;
-                width: 100% !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                gap: 5mm !important;
-                flex-direction: row !important;
+                padding: 10px !important;
+                background: #2c5aa0 !important;
+                color: white !important;
+                display: flex !important;
                 justify-content: space-between !important;
                 align-items: center !important;
-                flex-wrap: nowrap !important;
-            }
-
-            /* ضبط ترتيب العناصر في الرأس ليكون الشعار يميناً ثم حقول الإدخال */
-            .header-info-container {
-                flex-grow: 1 !important;
-                gap: 5mm !important;
-                order: 2 !important;
-                justify-content: flex-end !important;
-            }
-            .logo { 
-                width: 15mm !important; 
-                height: auto !important;
-                order: 1 !important;
-            }
-            .input-section {
-                order: 2 !important;
-                min-width: 120px;
             }
             
-            /* دمج العنوان الرئيسي مع حقول الإدخال في الرأس للطباعة */
-            .title-and-inputs {
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                width: auto !important;
-                order: 3 !important;
-                flex-grow: 2 !important;
+            .title-section {
+                padding: 15px !important;
+                text-align: center !important;
+                background: #f8f9fa !important;
             }
+            
             .main-title {
-                font-size: 14px !important;
-                flex-grow: 1;
-                justify-content: flex-start;
+                font-size: 18px !important;
+                font-weight: bold !important;
+                color: #333 !important;
             }
-            .month-input {
-                width: 60px !important;
-                min-width: 60px !important;
-                font-size: 12px !important;
-            }
-            .input-section input { font-size: 8px !important; padding: 1mm !important; height: auto !important; }
             
-            /* أنماط الطباعة للجدول بحدود 0.5 بكسل */
+            .month-input {
+                font-size: 18px !important;
+                font-weight: bold !important;
+                color: #2c5aa0 !important;
+                border: none !important;
+                border-bottom: 2px solid #2c5aa0 !important;
+                background: transparent !important;
+            }
+            
+            .logo {
+                width: 60px !important;
+                height: auto !important;
+            }
+            
+            .input-section input {
+                font-size: 10px !important;
+                padding: 5px !important;
+                background: rgba(255,255,255,0.9) !important;
+                border: 1px solid #ddd !important;
+                border-radius: 3px !important;
+            }
+            
+            .table-container {
+                padding: 10px !important;
+                width: 100% !important;
+            }
+            
             .main-table {
                 width: 100% !important;
-                margin: 0 !important;
-                font-size: 8px !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                table-layout: fixed !important;
                 border-collapse: collapse !important;
+                font-size: 8px !important;
+                margin: 0 !important;
             }
             
-            .main-table th, .main-table td {
-                padding: 2px !important;
-                font-size: 7px !important;
-                border: 0.5px solid #000 !important; /* حدود أنعم */
+            .main-table th,
+            .main-table td {
+                border: 1px solid #000 !important;
+                padding: 3px !important;
                 text-align: center !important;
                 vertical-align: middle !important;
-            }
-
-            /* تصغير حجم خط العناوين الفرعية */
-            .main-table .col-elearning-sub,
-            .main-table .col-commitment-sub,
-            .main-table .col-growth-sub,
-            .main-table .col-achievement-sub {
-                font-size: 5px !important;
-            }
-
-            .main-table .col-elearning-subsub,
-            .main-table .col-achievement-subsub {
-                font-size: 5px !important;
-            }
-
-
-            /* تنسيق ذيل الصفحة عند الطباعة */
-            .footer {
-                padding: 3mm !important;
-                justify-content: space-between !important;
-                flex-direction: row !important;
-                gap: 10mm !important;
-            }
-            .signature-box {
-                min-width: 120px !important;
-                width: 45% !important;
-            }
-            .signature-box input {
                 font-size: 7px !important;
-                padding: 1mm !important;
             }
-
-            /* تحديد عرض الأعمدة لضمان احتواء المحتوى */
-            .main-table colgroup col:nth-child(1) { width: 2.5% !important; } /* م */
-            .main-table colgroup col:nth-child(2) { width: 7% !important; } /* الاسم */
-            .main-table colgroup col:nth-child(3), .main-table colgroup col:nth-child(4) { width: 5% !important; } /* تحضير الدروس */
-            .main-table colgroup col:nth-child(5) { width: 4% !important; } /* الأنشطة */
-            .main-table colgroup col:nth-child(6) { width: 4% !important; } /* الاختبارات */
-            .main-table colgroup col:nth-child(7) { width: 4% !important; } /* دروس معدة */
-            .main-table colgroup col:nth-child(8) { width: 4% !important; } /* دروس غير معدة */
-            .main-table colgroup col:nth-child(9), .main-table colgroup col:nth-child(10), .main-table colgroup col:nth-child(11), .main-table colgroup col:nth-child(12), .main-table colgroup col:nth-child(13) { width: 4.5% !important; } /* الالتزام */
-            .main-table colgroup col:nth-child(14), .main-table colgroup col:nth-child(15), .main-table colgroup col:nth-child(16), .main-table colgroup col:nth-child(17), .main-table colgroup col:nth-child(18) { width: 4.5% !important; } /* النمو */
-            .main-table colgroup col:nth-child(19), .main-table colgroup col:nth-child(20), .main-table colgroup col:nth-child(21) { width: 4% !important; } /* التحصيل */
-            .main-table colgroup col:nth-child(22), .main-table colgroup col:nth-child(23), .main-table colgroup col:nth-child(24), .main-table colgroup col:nth-child(25) { width: 4% !important; } /* التقويم */
-            .main-table colgroup col:nth-child(26) { width: 8% !important; } /* التوقيع */
+            
+            .main-table th {
+                font-weight: bold !important;
+                color: white !important;
+            }
+            
+            .main-table input {
+                border: none !important;
+                background: transparent !important;
+                width: 100% !important;
+                text-align: center !important;
+                font-size: 7px !important;
+                padding: 1px !important;
+            }
+            
+            .footer {
+                padding: 10px !important;
+                background: #f8f9fa !important;
+                display: flex !important;
+                justify-content: center !important;
+                gap: 50px !important;
+            }
+            
+            .signature-box input {
+                font-size: 10px !important;
+                padding: 5px !important;
+                border: 1px solid #ddd !important;
+                border-radius: 3px !important;
+                width: 200px !important;
+            }
+            
+            /* Column Colors */
+            .col-number { background: #6c757d !important; }
+            .col-name { background: #495057 !important; }
+            .col-elearning { background: #007bff !important; }
+            .col-elearning-sub { background: #66b3ff !important; }
+            .col-elearning-subsub { background: #b3d9ff !important; }
+            .col-commitment { background: #28a745 !important; }
+            .col-commitment-sub { background: #66d966 !important; }
+            .col-growth { background: #ffc107 !important; color: #333 !important; }
+            .col-growth-sub { background: #ffdb66 !important; color: #333 !important; }
+            .col-achievement { background: #dc3545 !important; }
+            .col-achievement-sub { background: #ff6b7a !important; }
+            .col-achievement-subsub { background: #ffb3ba !important; }
+            .col-signature { background: #6f42c1 !important; }
         }
         
-        /* الأنماط العامة لصفحة الويب */
         * {
             margin: 0;
             padding: 0;
@@ -176,93 +172,64 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             overflow: hidden;
         }
-
-        /* هيكل جديد للرأس */
+        
         .header {
             background: linear-gradient(135deg, #2c5aa0 0%, #1e3a5f 100%);
-            padding: 15px 30px;
+            padding: 30px;
             color: white;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
             flex-wrap: nowrap;
+            gap: 30px;
+            position: relative;
         }
         
-        .header-info-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo {
-            width: 80px;
-            height: auto;
-        }
-
         .input-section {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 8px;
+            min-width: 250px;
         }
         
         .input-section input {
-            padding: 6px 10px;
+            padding: 8px 12px;
             border: none;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 14px;
             font-family: 'Cairo', sans-serif;
             font-weight: 700;
             background: rgba(255,255,255,0.95);
             color: #333;
             transition: all 0.3s ease;
-            height: 30px;
+            height: 35px;
         }
         
         .input-section input:focus {
             outline: none;
             box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
         }
-
-        .title-and-inputs {
+        
+        .logo-section {
             display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 10px;
-        }
-
-        .main-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: white;
-            font-family: 'Cairo', sans-serif;
-            display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 5px;
         }
-
-        .month-input {
-            display: inline-block;
-            border: none;
-            border-bottom: 2px solid white;
-            background: transparent;
-            font-size: 18px;
-            font-weight: 700;
-            color: white;
+        
+        .logo {
+            width: 100px;
+            height: auto;
+        }
+        
+        .title-section {
+            padding: 30px;
             text-align: center;
-            min-width: 100px;
-            padding: 4px;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .month-input:focus {
-            outline: none;
-            border-bottom-color: #f8f9fa;
-        }
-
-        .gender-selection {
-            padding: 20px 30px;
             background: #f8f9fa;
             border-bottom: 3px solid #2c5aa0;
+        }
+        
+        .gender-selection {
+            margin-bottom: 25px;
             display: flex;
             justify-content: center;
             gap: 20px;
@@ -273,14 +240,14 @@
         }
         
         .gender-btn {
-            padding: 10px 20px;
+            padding: 15px 30px;
             border: 2px solid #2c5aa0;
             background: white;
             color: #2c5aa0;
             border-radius: 25px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 16px;
             font-family: 'Cairo', sans-serif;
             transition: all 0.3s ease;
         }
@@ -290,6 +257,33 @@
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(44, 90, 160, 0.3);
+        }
+        
+        .main-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .month-input {
+            display: inline-block;
+            border: none;
+            border-bottom: 3px solid #2c5aa0;
+            background: transparent;
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c5aa0;
+            text-align: center;
+            min-width: 150px;
+            padding: 8px;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .month-input:focus {
+            outline: none;
+            border-bottom-color: #1e3a5f;
         }
         
         .controls {
@@ -366,6 +360,17 @@
             box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
         }
         
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .btn-warning:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+        }
+        
         .btn-group {
             display: flex;
             flex-direction: column;
@@ -377,17 +382,26 @@
             overflow-x: auto;
         }
         
+        @media print {
+            .table-container {
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                overflow: visible !important;
+            }
+        }
+        
         .main-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
             font-family: 'Cairo', sans-serif;
             background: white;
-            border: 0.5px solid black; /* حدود الجدول 0.5 بكسل */
         }
         
-        .main-table th, .main-table td {
-            border: 0.5px solid #000; /* حدود الخلايا 0.5 بكسل */
+        .main-table th,
+        .main-table td {
+            border: 1px solid #ddd;
             padding: 10px;
             text-align: center;
             vertical-align: middle;
@@ -415,9 +429,12 @@
         .col-achievement-subsub { background: #ffb3ba; }
         .col-signature { background: #6f42c1; }
         
-        .main-table td { background: white; }
+        .main-table td {
+            background: white;
+        }
         
-        .main-table input[type="number"], .main-table input[type="text"] {
+        .main-table input[type="number"] {
+            width: 70px;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -425,8 +442,15 @@
             font-family: 'Cairo', sans-serif;
             font-size: 14px;
         }
-        .main-table input[type="number"] { width: 70px; }
-        .main-table input[type="text"] { width: 140px; }
+        
+        .main-table input[type="text"] {
+            width: 140px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+        }
         
         .check-cell {
             cursor: pointer;
@@ -436,14 +460,15 @@
             min-width: 50px;
         }
         
-        .check-cell:hover { background: #f8f9fa; }
+        .check-cell:hover {
+            background: #f8f9fa;
+        }
         
-        /* هيكل جديد للذيل */
         .footer {
             padding: 30px;
             background: #f8f9fa;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             flex-wrap: wrap;
             gap: 30px;
@@ -452,9 +477,13 @@
         .signature-box {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            min-width: 250px;
+            gap: 15px;
+            min-width: 300px;
             align-items: center;
+        }
+        
+        .signature-input label {
+            display: none;
         }
         
         .signature-input {
@@ -466,11 +495,11 @@
         
         .signature-input input {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-family: 'Cairo', sans-serif;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 700;
             transition: border-color 0.3s ease;
         }
@@ -479,16 +508,113 @@
             outline: none;
             border-color: #2c5aa0;
         }
+
+        /* PDF specific styles */
+        .pdf-page {
+            width: 297mm;
+            min-height: 210mm;
+            background: white;
+            margin: 0;
+            padding: 10mm;
+            box-sizing: border-box;
+            page-break-after: always;
+            display: none;
+        }
+
+        .pdf-page:last-child {
+            page-break-after: avoid;
+        }
+
+        .pdf-page.active {
+            display: block;
+        }
+
+        .pdf-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2c5aa0;
+            color: white;
+            padding: 8mm;
+            margin-bottom: 5mm;
+        }
+
+        .pdf-title {
+            text-align: center;
+            background: #f8f9fa;
+            padding: 8mm;
+            margin-bottom: 5mm;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8px;
+            margin-bottom: 5mm;
+        }
+
+        .pdf-table th,
+        .pdf-table td {
+            border: 1px solid #000;
+            padding: 2px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .pdf-table th {
+            font-weight: bold;
+            color: white;
+        }
+
+        .pdf-footer {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            background: #f8f9fa;
+            padding: 8mm;
+            margin-top: 5mm;
+        }
         
         @media (max-width: 768px) {
-            .header { flex-direction: column; text-align: center; }
-            .header-info-container, .title-and-inputs { flex-direction: column; }
-            .controls, .footer { flex-direction: column; }
-            .names-input { min-width: 100%; }
-            .main-table { font-size: 11px; }
-            .main-table th, .main-table td { padding: 8px; }
-            .main-title { font-size: 24px; }
-            .month-input { font-size: 20px; }
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .input-section {
+                max-width: 100%;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .names-input {
+                min-width: 100%;
+            }
+            
+            .footer {
+                flex-direction: column;
+            }
+            
+            .main-table {
+                font-size: 11px;
+            }
+            
+            .main-table th,
+            .main-table td {
+                padding: 8px;
+            }
+            
+            .main-title {
+                font-size: 24px;
+            }
+            
+            .month-input {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -496,27 +622,31 @@
     <div class="container" id="record-page">
         <!-- Header -->
         <div class="header">
-            <div class="header-info-container">
+            <div class="logo-section">
                 <img src="https://salogos.org/wp-content/uploads/2021/11/UntiTtled-1-1300x988.png" alt="شعار وزارة التعليم" class="logo">
-                <div class="input-section">
-                    <input type="text" id="education-dept" placeholder="أدخل الإدارة التعليمية">
-                    <input type="text" id="education-region" placeholder="أدخل المنطقة التعليمية">
-                    <input type="text" id="school-name" placeholder="أدخل اسم المدرسة">
-                </div>
             </div>
-            <div class="title-and-inputs">
-                <div class="main-title" id="main-title">
-                    سجل متابعة المعلم للعام الدراسي خلال شهر 
-                    <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">
-                </div>
+            
+            <div class="input-section">
+                <input type="text" id="education-dept" placeholder="أدخل الإدارة التعليمية">
+                <input type="text" id="education-region" placeholder="أدخل المنطقة التعليمية">
+                <input type="text" id="school-name" placeholder="أدخل المدرسة">
+            </div>
+        </div>
+        
+        <!-- Title Section -->
+        <div class="title-section">
+            <div class="gender-selection">
+                <button class="gender-btn active" onclick="selectGender('male')">معلم</button>
+                <button class="gender-btn" onclick="selectGender('female')">معلمة</button>
+            </div>
+            
+            <div class="main-title" id="main-title">
+                سجل متابعة المعلم للعام الدراسي خلال شهر 
+                <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">
             </div>
         </div>
         
         <!-- Controls -->
-        <div class="gender-selection no-print">
-            <button class="gender-btn active" onclick="selectGender('male')">معلم</button>
-            <button class="gender-btn" onclick="selectGender('female')">معلمة</button>
-        </div>
         <div class="controls no-print">
             <div class="names-input">
                 <label>الصق بيانات المعلمين/المعلمات هنا:</label>
@@ -525,77 +655,50 @@
             <div class="btn-group">
                 <button class="btn btn-primary" onclick="extractNames()">استخراج الأسماء</button>
                 <button class="btn btn-success" onclick="window.print()">🖨️ طباعة مباشرة</button>
+                <button class="btn btn-warning" onclick="generatePDF()">📄 تحويل إلى PDF</button>
             </div>
         </div>
         
         <!-- Table -->
         <div class="table-container">
             <table class="main-table" id="main-table">
-                <colgroup>
-                    <col style="width: 2.5%;">
-                    <col style="width: 7%;">
-                    <col style="width: 5%;">
-                    <col style="width: 5%;">
-                    <col style="width: 4%;">
-                    <col style="width: 4%;">
-                    <col style="width: 4%;">
-                    <col style="width: 4%;">
-                    <col style="width: 4.5%;">
-                    <col style="width: 4.5%;">
-                    <col style="width: 4.5%;">
-                    <col style="width: 4.5%;">
-                    <col style="width: 4.5%;">
-                    <col style="width: 4.5%;">
-                    <col style="width: 4.5%;">
-                    <col style="width: 4.5%;">
-                    <col style="width: 4.5%;">
-                    <col style="width: 4.5%;">
-                    <col style="width: 4%;">
-                    <col style="width: 4%;">
-                    <col style="width: 4%;">
-                    <col style="width: 4%;">
-                    <col style="width: 4%;">
-                    <col style="width: 4%;">
-                    <col style="width: 4%;">
-                    <col style="width: 8%;">
-                </colgroup>
                 <thead>
                     <tr>
                         <th rowspan="3" class="col-number">م</th>
                         <th rowspan="3" class="col-name" id="name-column-header">اسم المعلم</th>
-                        <th colspan="6" class="col-elearning">التعليم الإلكتروني</th>
-                        <th colspan="5" class="col-commitment">الالتزام الوظيفي</th>
-                        <th colspan="5" class="col-growth">النمو المهني</th>
-                        <th colspan="7" class="col-achievement">متابعة التحصيل</th>
-                        <th rowspan="3" class="col-signature">توقيع المعلم/ـة</th>
+                        <th colspan="6" class="col-elearning">التعليم الإلكتروني (مدرستي)</th>
+                        <th colspan="5" class="col-commitment">معايير الالتزام الوظيفي</th>
+                        <th colspan="5" class="col-growth">معايير النمو المهني</th>
+                        <th colspan="7" class="col-achievement">متابعة التحصيل الدراسي</th>
+                        <th rowspan="3" class="col-signature">توقيع المعلم/ـة بالاطلاع</th>
                     </tr>
                     <tr>
                         <th colspan="2" class="col-elearning-sub">تحضير الدروس</th>
-                        <th rowspan="2" class="col-elearning-sub">الأنشطة</th>
-                        <th rowspan="2" class="col-elearning-sub">الاختبارات</th>
-                        <th rowspan="2" class="col-elearning-sub">دروس<br>معدة</th>
-                        <th rowspan="2" class="col-elearning-sub">دروس<br>غير معدة</th>
-                        <th rowspan="2" class="col-commitment-sub">المحافظة<br>على الدوام</th>
-                        <th rowspan="2" class="col-commitment-sub">الالتزام<br>بزمن الحصص</th>
-                        <th rowspan="2" class="col-commitment-sub">المشاركة في<br>الأنشطة</th>
-                        <th rowspan="2" class="col-commitment-sub">المحافظة على<br>البيئة</th>
-                        <th rowspan="2" class="col-commitment-sub">التعاون<br>وروح الفريق</th>
-                        <th rowspan="2" class="col-growth-sub">مجتمع<br>مهني</th>
-                        <th rowspan="2" class="col-growth-sub">زيارة<br>تبادلية</th>
-                        <th rowspan="2" class="col-growth-sub">ورشة<br>عمل</th>
-                        <th rowspan="2" class="col-growth-sub">درس<br>تطبيقي</th>
+                        <th rowspan="2" class="col-elearning-sub">عدد الأنشطة</th>
+                        <th rowspan="2" class="col-elearning-sub">عدد الاختبارات</th>
+                        <th rowspan="2" class="col-elearning-sub">عدد الدروس المعدة</th>
+                        <th rowspan="2" class="col-elearning-sub">عدد الدروس غير المعدة</th>
+                        <th rowspan="2" class="col-commitment-sub">المحافظة على أوقات الدوام</th>
+                        <th rowspan="2" class="col-commitment-sub">الالتزام بزمن الحصص</th>
+                        <th rowspan="2" class="col-commitment-sub">المشاركة في الأنشطة والإذاعة</th>
+                        <th rowspan="2" class="col-commitment-sub">المحافظة على البيئة</th>
+                        <th rowspan="2" class="col-commitment-sub">التعاون وروح الفريق</th>
+                        <th rowspan="2" class="col-growth-sub">مجتمع مهني</th>
+                        <th rowspan="2" class="col-growth-sub">زيارة تبادلية</th>
+                        <th rowspan="2" class="col-growth-sub">ورشة عمل</th>
+                        <th rowspan="2" class="col-growth-sub">درس تطبيقي</th>
                         <th rowspan="2" class="col-growth-sub">استراتيجيات</th>
-                        <th rowspan="2" class="col-achievement-sub">اختبارات<br>تشخيصية</th>
-                        <th rowspan="2" class="col-achievement-sub">تحليل<br>النتائج</th>
-                        <th rowspan="2" class="col-achievement-sub">الخطط<br>العلاجية</th>
+                        <th rowspan="2" class="col-achievement-sub">الاختبارات التشخيصية</th>
+                        <th rowspan="2" class="col-achievement-sub">تحليل النتائج</th>
+                        <th rowspan="2" class="col-achievement-sub">الخطط العلاجية</th>
                         <th colspan="4" class="col-achievement-sub">تنوع أساليب التقويم</th>
                     </tr>
                     <tr>
-                        <th class="col-elearning-subsub" style="color: #1e3a5f;">ملائم<br>للخطة</th>
-                        <th class="col-elearning-subsub" style="color: #1e3a5f;">مستوفي<br>العناصر</th>
-                        <th class="col-achievement-subsub">اختبارات<br>قصيرة</th>
-                        <th class="col-achievement-subsub">ملف<br>إنجاز</th>
-                        <th class="col-achievement-subsub">واجبات<br>إضافية</th>
+                        <th class="col-elearning-subsub" style="color: #1e3a5f;">ملائم للخطة</th>
+                        <th class="col-elearning-subsub" style="color: #1e3a5f;">مستوفي العناصر</th>
+                        <th class="col-achievement-subsub">اختبارات قصيرة</th>
+                        <th class="col-achievement-subsub">ملف الإنجاز</th>
+                        <th class="col-achievement-subsub">واجبات إضافية</th>
                         <th class="col-achievement-subsub">مشاريع</th>
                     </tr>
                 </thead>
@@ -608,45 +711,62 @@
         <!-- Footer -->
         <div class="footer">
             <div class="signature-box">
-                <input type="text" placeholder="أدخل الصفة والاسم">
+                <div class="signature-input">
+                    <input type="text" id="signature-title" placeholder="أدخل الصفة">
+                </div>
             </div>
             <div class="signature-box">
-                <input type="text" placeholder="أدخل الصفة والاسم">
+                <div class="signature-input">
+                    <input type="text" id="signature-name" placeholder="أدخل الاسم">
+                </div>
             </div>
         </div>
+    </div>
+
+    <!-- PDF Pages Container (Hidden) -->
+    <div id="pdf-pages-container" style="display: none;">
+        <!-- PDF pages will be generated here -->
     </div>
 
     <script>
         let currentGender = 'male';
         let rowCounter = 0;
+        let allNames = [];
 
         function selectGender(gender) {
             currentGender = gender;
             
-            // تحديث حالة الأزرار
+            // Update button states
             document.querySelectorAll('.gender-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            // تحديث العنوان ورأس العمود
+            // Update title and column header
             const title = document.getElementById('main-title');
             const columnHeader = document.getElementById('name-column-header');
-            const monthInput = document.getElementById('month-input');
-            const monthValue = monthInput.value;
-
+            
             if (gender === 'male') {
-                title.innerHTML = `
-                    سجل متابعة المعلم للعام الدراسي خلال شهر 
-                    <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="${monthValue}">
-                `;
+                title.innerHTML = 'سجل متابعة المعلم للعام الدراسي خلال شهر <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">';
                 columnHeader.textContent = 'اسم المعلم';
             } else {
-                title.innerHTML = `
-                    سجل متابعة المعلمات للعام الدراسي خلال شهر 
-                    <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="${monthValue}">
-                `;
+                title.innerHTML = 'سجل متابعة المعلمات للعام الدراسي خلال شهر <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">';
                 columnHeader.textContent = 'اسم المعلمة';
+            }
+        }
+
+        function extractFirstAndLast(fullName) {
+            // إزالة المسافات الزائدة
+            fullName = fullName.trim();
+            
+            // تقسيم النص باستخدام المسافة
+            let parts = fullName.split(/\s+/);
+
+            // الاحتفاظ فقط بأول وآخر كلمة
+            if (parts.length >= 2) {
+                return parts[0] + " " + parts[parts.length - 1];
+            } else {
+                return fullName; // إذا الاسم كلمة واحدة
             }
         }
 
@@ -654,18 +774,20 @@
             // إزالة الأرقام والرموز
             let cleaned = text.replace(/[0-9\-\:\.\،\,\(\)\[\]\/\\]/g, ' ');
             
-            // إزالة الكلمات غير المرغوبة
-            const unwantedWords = [
-                'التخصص', 'رقم', 'الهوية', 'السجل', 'المادة', 'المؤهل', 'القسم', 'المرحلة',
-                'المعلم', 'المعلمة', 'الأستاذ', 'مشرف', 'معلم', 'معلمة', 'أستاذ', 'دكتور',
-                'بكالوريوس', 'ماجستير', 'دكتوراه', 'رياضيات', 'عربية', 'إنجليزية', 'علوم',
-                'تاريخ', 'جغرافيا', 'فيزياء', 'كيمياء', 'أحياء', 'حاسوب', 'تربية', 'إسلامية',
-                'فنية', 'بدنية', 'اجتماعيات', 'لغة', 'الرياضيات', 'العلوم', 'التاريخ',
-                'الجغرافيا', 'الفيزياء', 'الكيمياء', 'الأحياء', 'الحاسوب', 'التربية',
-                'دائم', 'مؤقت', 'بديل'
+            // قائمة الكلمات المراد حذفها
+            const wordsToRemove = [
+                'معلم', 'معلمة', 'أستاذ', 'أستاذة', 'دكتور', 'دكتورة', 'مدرس', 'مدرسة',
+                'رياضيات', 'فيزياء', 'كيمياء', 'أحياء', 'عربية', 'انجليزية', 'فرنسية',
+                'تاريخ', 'جغرافيا', 'اجتماعيات', 'تربية', 'إسلامية', 'قرآن', 'حديث',
+                'فقه', 'توحيد', 'حاسوب', 'حاسب', 'آلي', 'تقنية', 'معلومات', 'رقم',
+                'الهوية', 'المؤهل', 'بكالوريوس', 'ماجستير', 'دكتوراه', 'دبلوم',
+                'تخصص', 'قسم', 'كلية', 'جامعة', 'معهد', 'مدرسة', 'ثانوية', 'متوسطة',
+                'ابتدائية', 'روضة', 'أطفال', 'صف', 'فصل', 'مرحلة', 'سنة', 'عام',
+                'الأول', 'الثاني', 'الثالث', 'الرابع', 'الخامس', 'السادس'
             ];
             
-            unwantedWords.forEach(word => {
+            // حذف الكلمات غير المرغوب فيها
+            wordsToRemove.forEach(word => {
                 const regex = new RegExp(word, 'g');
                 cleaned = cleaned.replace(regex, ' ');
             });
@@ -699,13 +821,15 @@
                 return;
             }
             
-            // مسح الصفوف الموجودة
+            // Clear existing rows and reset
             document.getElementById('table-body').innerHTML = '';
             rowCounter = 0;
+            allNames = [];
             
             lines.forEach(line => {
                 const extractedName = cleanAndExtractName(line);
                 if (extractedName) {
+                    allNames.push(extractedName);
                     addTableRow(extractedName);
                 }
             });
@@ -750,7 +874,7 @@
                 <td class="check-cell" onclick="toggleCheck(this)"></td>
                 <td class="check-cell" onclick="toggleCheck(this)"></td>
                 <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td><input type="text" placeholder="أدخل التوقيع"></td>
+                <td><input type="text"></td>
             `;
             
             tbody.appendChild(row);
@@ -770,8 +894,206 @@
                 cell.style.backgroundColor = '';
             }
         }
-        
-        // عند تحميل الصفحة، يتم تعيين الشهر الحالي
+
+        function createPDFPage(names, startIndex, pageNumber) {
+            const educationDept = document.getElementById('education-dept').value;
+            const educationRegion = document.getElementById('education-region').value;
+            const schoolName = document.getElementById('school-name').value;
+            const monthValue = document.getElementById('month-input').value;
+            const signatureTitle = document.getElementById('signature-title').value;
+            const signatureName = document.getElementById('signature-name').value;
+            const genderText = currentGender === 'male' ? 'المعلم' : 'المعلمات';
+            const nameColumnHeader = currentGender === 'male' ? 'اسم المعلم' : 'اسم المعلمة';
+
+            const pageDiv = document.createElement('div');
+            pageDiv.className = 'pdf-page active';
+            
+            pageDiv.innerHTML = `
+                <div class="pdf-header">
+                    <div style="display: flex; flex-direction: column; gap: 5px; font-size: 10px;">
+                        <div>${educationDept}</div>
+                        <div>${educationRegion}</div>
+                        <div>${schoolName}</div>
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <img src="https://salogos.org/wp-content/uploads/2021/11/UntiTtled-1-1300x988.png" alt="شعار وزارة التعليم" style="width: 60px; height: auto;">
+                    </div>
+                </div>
+                
+                <div class="pdf-title">
+                    سجل متابعة ${genderText} للعام الدراسي خلال شهر ${monthValue}
+                </div>
+                
+                <table class="pdf-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="3" class="col-number">م</th>
+                            <th rowspan="3" class="col-name">${nameColumnHeader}</th>
+                            <th colspan="6" class="col-elearning">التعليم الإلكتروني (مدرستي)</th>
+                            <th colspan="5" class="col-commitment">معايير الالتزام الوظيفي</th>
+                            <th colspan="5" class="col-growth">معايير النمو المهني</th>
+                            <th colspan="7" class="col-achievement">متابعة التحصيل الدراسي</th>
+                            <th rowspan="3" class="col-signature">توقيع المعلم/ـة بالاطلاع</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="col-elearning-sub">تحضير الدروس</th>
+                            <th rowspan="2" class="col-elearning-sub">عدد الأنشطة</th>
+                            <th rowspan="2" class="col-elearning-sub">عدد الاختبارات</th>
+                            <th rowspan="2" class="col-elearning-sub">عدد الدروس المعدة</th>
+                            <th rowspan="2" class="col-elearning-sub">عدد الدروس غير المعدة</th>
+                            <th rowspan="2" class="col-commitment-sub">المحافظة على أوقات الدوام</th>
+                            <th rowspan="2" class="col-commitment-sub">الالتزام بزمن الحصص</th>
+                            <th rowspan="2" class="col-commitment-sub">المشاركة في الأنشطة والإذاعة</th>
+                            <th rowspan="2" class="col-commitment-sub">المحافظة على البيئة</th>
+                            <th rowspan="2" class="col-commitment-sub">التعاون وروح الفريق</th>
+                            <th rowspan="2" class="col-growth-sub">مجتمع مهني</th>
+                            <th rowspan="2" class="col-growth-sub">زيارة تبادلية</th>
+                            <th rowspan="2" class="col-growth-sub">ورشة عمل</th>
+                            <th rowspan="2" class="col-growth-sub">درس تطبيقي</th>
+                            <th rowspan="2" class="col-growth-sub">استراتيجيات</th>
+                            <th rowspan="2" class="col-achievement-sub">الاختبارات التشخيصية</th>
+                            <th rowspan="2" class="col-achievement-sub">تحليل النتائج</th>
+                            <th rowspan="2" class="col-achievement-sub">الخطط العلاجية</th>
+                            <th colspan="4" class="col-achievement-sub">تنوع أساليب التقويم</th>
+                        </tr>
+                        <tr>
+                            <th class="col-elearning-subsub" style="color: #1e3a5f;">ملائم للخطة</th>
+                            <th class="col-elearning-subsub" style="color: #1e3a5f;">مستوفي العناصر</th>
+                            <th class="col-achievement-subsub">اختبارات قصيرة</th>
+                            <th class="col-achievement-subsub">ملف الإنجاز</th>
+                            <th class="col-achievement-subsub">واجبات إضافية</th>
+                            <th class="col-achievement-subsub">مشاريع</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${names.map((name, index) => `
+                            <tr>
+                                <td>${startIndex + index + 1}</td>
+                                <td>${name}</td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td></td><td></td><td></td><td></td><td></td>
+                                <td></td><td></td><td></td><td></td><td></td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td></td>
+                            </tr>
+                        `).join('')}
+                        ${Array.from({length: Math.max(0, 20 - names.length)}, (_, i) => `
+                            <tr>
+                                <td>${startIndex + names.length + i + 1}</td>
+                                <td></td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td></td><td></td><td></td><td></td><td></td>
+                                <td></td><td></td><td></td><td></td><td></td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                
+                <div class="pdf-footer">
+                    <div style="text-align: center;">
+                        <div style="margin-bottom: 10px; font-weight: bold;">${signatureTitle}</div>
+                        <div style="border-bottom: 2px solid #333; width: 200px; padding-bottom: 5px;">${signatureName}</div>
+                    </div>
+                </div>
+            `;
+            
+            return pageDiv;
+        }
+
+        async function generatePDF() {
+            if (allNames.length === 0) {
+                alert('يرجى استخراج الأسماء أولاً');
+                return;
+            }
+
+            // Hide controls and show loading message
+            const controls = document.querySelector('.controls');
+            const originalDisplay = controls.style.display;
+            controls.style.display = 'none';
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                const pagesContainer = document.getElementById('pdf-pages-container');
+                pagesContainer.innerHTML = '';
+                pagesContainer.style.display = 'block';
+
+                // Create pages with 20 names each
+                const pages = [];
+                for (let i = 0; i < allNames.length; i += 20) {
+                    const pageNames = allNames.slice(i, i + 20);
+                    const pageDiv = createPDFPage(pageNames, i, Math.floor(i / 20) + 1);
+                    pagesContainer.appendChild(pageDiv);
+                    pages.push(pageDiv);
+                }
+
+                // Capture each page
+                for (let i = 0; i < pages.length; i++) {
+                    const pageDiv = pages[i];
+                    
+                    // Show only current page
+                    pages.forEach(p => p.style.display = 'none');
+                    pageDiv.style.display = 'block';
+
+                    // Wait for fonts and images to load
+                    await new Promise(resolve => setTimeout(resolve, 500));
+
+                    const canvas = await html2canvas(pageDiv, {
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: true,
+                        backgroundColor: '#ffffff',
+                        width: 1122, // A4 landscape width in pixels at 96 DPI * 2 for scale
+                        height: 794,  // A4 landscape height in pixels at 96 DPI * 2 for scale
+                        scrollX: 0,
+                        scrollY: 0
+                    });
+
+                    const imgData = canvas.toDataURL('image/png');
+                    
+                    if (i > 0) {
+                        pdf.addPage();
+                    }
+                    
+                    // Add image to fill entire page
+                    pdf.addImage(imgData, 'PNG', 0, 0, 297, 210);
+                }
+
+                // Clean up
+                pagesContainer.style.display = 'none';
+                pagesContainer.innerHTML = '';
+
+                // Generate filename
+                const monthValue = document.getElementById('month-input').value || 'الشهر';
+                const schoolName = document.getElementById('school-name').value || 'المدرسة';
+                const genderText = currentGender === 'male' ? 'المعلمين' : 'المعلمات';
+                const filename = `سجل_متابعة_${genderText}_${monthValue}_${schoolName}.pdf`;
+
+                pdf.save(filename);
+                alert('تم إنشاء ملف PDF بنجاح!');
+
+            } catch (error) {
+                console.error('خطأ في إنشاء PDF:', error);
+                alert('حدث خطأ في إنشاء ملف PDF. يرجى المحاولة مرة أخرى.');
+            } finally {
+                // Restore controls
+                controls.style.display = originalDisplay;
+                
+                // Clean up
+                const pagesContainer = document.getElementById('pdf-pages-container');
+                pagesContainer.style.display = 'none';
+                pagesContainer.innerHTML = '';
+            }
+        }
+
+        // Initialize with current month
         window.onload = function() {
             const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
                           'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
