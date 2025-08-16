@@ -102,7 +102,7 @@
                 padding: 3px !important;
                 text-align: center !important;
                 vertical-align: middle !important;
-                font-size: 7px !important;
+                font-size: 6px !important; /* Further reduced font size */
             }
             
             .main-table th {
@@ -115,7 +115,7 @@
                 background: transparent !important;
                 width: 100% !important;
                 text-align: center !important;
-                font-size: 7px !important;
+                font-size: 6px !important; /* Further reduced font size */
                 padding: 1px !important;
             }
             
@@ -515,7 +515,7 @@
             min-height: 210mm;
             background: white;
             margin: 0;
-            padding: 10mm;
+            padding: 5mm; /* Reduced padding */
             box-sizing: border-box;
             page-break-after: always;
             display: none;
@@ -535,30 +535,39 @@
             align-items: center;
             background: #2c5aa0;
             color: white;
-            padding: 8mm;
-            margin-bottom: 2mm; /* Reduced margin */
+            padding: 5mm; /* Reduced padding */
+            margin-bottom: 1mm; /* Reduced margin */
+        }
+
+        .pdf-header div {
+            font-size: 8px; /* Reduced font size for header text */
+        }
+
+        .pdf-header img {
+            width: 40px; /* Reduced logo size */
+            height: auto;
         }
 
         .pdf-title {
             text-align: center;
             background: #f8f9fa;
-            padding: 8mm;
-            margin-bottom: 2mm; /* Reduced margin */
-            font-size: 18px;
+            padding: 5mm; /* Reduced padding */
+            margin-bottom: 1mm; /* Reduced margin */
+            font-size: 16px; /* Reduced font size */
             font-weight: bold;
         }
 
         .pdf-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 7px; /* Reduced font size for sub-columns */
-            margin-bottom: 2mm; /* Reduced margin */
+            font-size: 6px; /* Further reduced font size for sub-columns */
+            margin-bottom: 1mm; /* Reduced margin */
         }
 
         .pdf-table th,
         .pdf-table td {
             border: 1px solid #000;
-            padding: 2px;
+            padding: 1px; /* Further reduced padding */
             text-align: center;
             vertical-align: middle;
         }
@@ -568,13 +577,21 @@
             color: white;
         }
 
+        .pdf-table .col-name {
+            width: 15%; /* Increased width for name column */
+        }
+
         .pdf-footer {
             display: flex;
             justify-content: center;
-            gap: 50px;
+            gap: 30px; /* Reduced gap */
             background: #f8f9fa;
-            padding: 8mm;
-            margin-top: 2mm; /* Reduced margin */
+            padding: 5mm; /* Reduced padding */
+            margin-top: 1mm; /* Reduced margin */
+        }
+
+        .pdf-footer .signature-box {
+            font-size: 7px; /* Reduced font size for signature box */
         }
         
         @media (max-width: 768px) {
@@ -892,13 +909,13 @@
             
             pageDiv.innerHTML = `
                 <div class="pdf-header">
-                    <div style="display: flex; flex-direction: column; gap: 5px; font-size: 10px;">
-                        <div>الإدارة التعليمية: ${educationDept}</div>
-                        <div>المنطقة التعليمية: ${educationRegion}</div>
-                        <div>المدرسة: ${schoolName}</div>
+                    <div style="display: flex; flex-direction: column; gap: 2px; font-size: 8px;">
+                        <div>${educationDept}</div>
+                        <div>${educationRegion}</div>
+                        <div>${schoolName}</div>
                     </div>
                     <div style="display: flex; justify-content: center; align-items: center;">
-                        <img src="https://salogos.org/wp-content/uploads/2021/11/UntiTtled-1-1300x988.png" alt="شعار وزارة التعليم" style="width: 60px; height: auto;">
+                        <img src="https://salogos.org/wp-content/uploads/2021/11/UntiTtled-1-1300x988.png" alt="شعار وزارة التعليم" style="width: 40px; height: auto;">
                     </div>
                 </div>
                 
@@ -951,7 +968,7 @@
                         ${names.map((name, index) => `
                             <tr>
                                 <td>${startIndex + index + 1}</td>
-                                <td>${name}</td>
+                                <td class="col-name-data">${name}</td>
                                 <td></td><td></td><td></td><td></td><td></td><td></td>
                                 <td></td><td></td><td></td><td></td><td></td>
                                 <td></td><td></td><td></td><td></td><td></td>
@@ -962,7 +979,7 @@
                         ${Array.from({length: Math.max(0, 20 - names.length)}, (_, i) => `
                             <tr>
                                 <td>${startIndex + names.length + i + 1}</td>
-                                <td></td>
+                                <td class="col-name-data"></td>
                                 <td></td><td></td><td></td><td></td><td></td><td></td>
                                 <td></td><td></td><td></td><td></td><td></td>
                                 <td></td><td></td><td></td><td></td><td></td>
@@ -974,9 +991,9 @@
                 </table>
                 
                 <div class="pdf-footer">
-                    <div style="text-align: center; font-size: 8px;">
-                        <div style="margin-bottom: 5px; font-weight: bold;">${signatureTitle}</div>
-                        <div style="border-bottom: 1px solid #333; width: 150px; padding-bottom: 2px;">${signatureName}</div>
+                    <div class="signature-box" style="text-align: center;">
+                        <div style="margin-bottom: 2px; font-weight: bold;">${signatureTitle}</div>
+                        <div style="border-bottom: 1px solid #333; width: 100px; padding-bottom: 1px;">${signatureName}</div>
                     </div>
                 </div>
             `;
