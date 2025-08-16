@@ -34,53 +34,54 @@
                 box-shadow: none !important;
                 border-radius: 0 !important;
                 background: white !important;
-                transform: scale(1) !important; /* Adjusted scale to be 1 */
+                transform: scale(1) !important;
                 transform-origin: top left !important;
+            }
+            
+            .header, .title-section, .footer {
+                padding: 3mm !important;
+                width: 100% !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                gap: 5mm !important; /* Smaller gap for print */
+                flex-direction: row !important; /* Ensure row direction */
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+            
+            .input-section { flex-direction: column !important; }
+            .input-section input {
+                font-size: 8px !important;
+                padding: 1mm !important;
+                height: auto !important;
+                width: 100% !important;
             }
             
             .main-table {
                 width: 100% !important;
                 margin: 0 !important;
-                font-size: 8px !important; /* Smaller font size */
+                font-size: 8px !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                table-layout: fixed !important; /* Fixed table layout is crucial */
+                table-layout: fixed !important;
                 border-collapse: collapse !important;
             }
             
-            .main-table th,
-            .main-table td {
-                padding: 3px !important;
-                font-size: 7px !important; /* Even smaller font size for cells */
+            .main-table th, .main-table td {
+                padding: 2px !important; /* Smaller padding */
+                font-size: 7px !important;
                 border: 0.5px solid #000 !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
                 text-align: center !important;
                 vertical-align: middle !important;
             }
-            
-            .main-table th {
-                font-size: 6px !important; /* Smallest font for headers */
-                color: white !important;
-                font-weight: bold !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            
-            /* Explicitly set column widths for fixed layout */
-            .main-table th:nth-child(1) { width: 3% !important; } /* م */
-            .main-table th:nth-child(2) { width: 12% !important; } /* الاسم */
-            .main-table th:nth-child(3), .main-table th:nth-child(4) { width: 5% !important; } /* تحضير الدروس */
-            .main-table th:nth-child(5) { width: 5% !important; } /* الأنشطة */
-            .main-table th:nth-child(6) { width: 5% !important; } /* الاختبارات */
-            .main-table th:nth-child(7) { width: 5% !important; } /* دروس معدة */
-            .main-table th:nth-child(8) { width: 5% !important; } /* دروس غير معدة */
-            .main-table th:nth-child(9), .main-table th:nth-child(10), .main-table th:nth-child(11), .main-table th:nth-child(12), .main-table th:nth-child(13) { width: 4% !important; } /* الالتزام */
-            .main-table th:nth-child(14), .main-table th:nth-child(15), .main-table th:nth-child(16), .main-table th:nth-child(17), .main-table th:nth-child(18) { width: 4% !important; } /* النمو */
-            .main-table th:nth-child(19), .main-table th:nth-child(20), .main-table th:nth-child(21) { width: 4% !important; } /* التحصيل */
-            .main-table th:nth-child(22), .main-table th:nth-child(23), .main-table th:nth-child(24), .main-table th:nth-child(25) { width: 4% !important; } /* التقويم */
-            .main-table th:nth-child(26) { width: 8% !important; } /* التوقيع */
 
+            /* Main Headers */
+            .main-table th[rowspan="3"] { font-size: 6px !important; }
+            /* Sub Headers */
+            .main-table th[rowspan="2"] { font-size: 6px !important; }
+            /* Sub-sub Headers (as requested) */
+            .main-table th[class$="-subsub"] { font-size: 6px !important; }
+            
             .main-table input {
                 font-size: 7px !important;
                 padding: 1px !important;
@@ -90,37 +91,29 @@
                 text-align: center !important;
             }
             
-            .header, .title-section, .footer {
-                padding: 3mm !important;
-                width: 100% !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            
             .main-title { font-size: 12px !important; }
             .month-input { font-size: 12px !important; }
             .logo { width: 15mm !important; height: auto !important; }
-            .input-section input, .signature-input input {
-                font-size: 8px !important;
-                padding: 1mm !important;
-                height: auto !important;
-            }
 
-            /* Column Colors */
-            .col-number { background: #6c757d !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .col-name { background: #495057 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .col-elearning { background: #007bff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .col-elearning-sub { background: #66b3ff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .col-elearning-subsub { background: #b3d9ff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .col-elearning-subsub[style*="color: #1e3a5f"] { color: #1e3a5f !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .col-commitment { background: #28a745 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .col-commitment-sub { background: #66d966 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .col-growth { background: #ffc107 !important; color: #333 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .col-growth-sub { background: #ffdb66 !important; color: #333 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .col-achievement { background: #dc3545 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .col-achievement-sub { background: #ff6b7a !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .col-achievement-subsub { background: #ffb3ba !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .col-signature { background: #6f42c1 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            /* Column Widths (Adjusted) */
+            .main-table colgroup col:nth-child(1) { width: 2.5% !important; } /* م */
+            .main-table colgroup col:nth-child(2) { width: 7% !important; } /* الاسم */
+            .main-table colgroup col:nth-child(3), .main-table colgroup col:nth-child(4) { width: 5% !important; } /* تحضير الدروس */
+            .main-table colgroup col:nth-child(5) { width: 4% !important; } /* الأنشطة */
+            .main-table colgroup col:nth-child(6) { width: 4% !important; } /* الاختبارات */
+            .main-table colgroup col:nth-child(7) { width: 4% !important; } /* دروس معدة */
+            .main-table colgroup col:nth-child(8) { width: 4% !important; } /* دروس غير معدة */
+            .main-table colgroup col:nth-child(9), .main-table colgroup col:nth-child(10), .main-table colgroup col:nth-child(11), .main-table colgroup col:nth-child(12), .main-table colgroup col:nth-child(13) { width: 4.5% !important; } /* الالتزام */
+            .main-table colgroup col:nth-child(14), .main-table colgroup col:nth-child(15), .main-table colgroup col:nth-child(16), .main-table colgroup col:nth-child(17), .main-table colgroup col:nth-child(18) { width: 4.5% !important; } /* النمو */
+            .main-table colgroup col:nth-child(19), .main-table colgroup col:nth-child(20), .main-table colgroup col:nth-child(21) { width: 4% !important; } /* التحصيل */
+            .main-table colgroup col:nth-child(22), .main-table colgroup col:nth-child(23), .main-table colgroup col:nth-child(24), .main-table colgroup col:nth-child(25) { width: 4% !important; } /* التقويم */
+            .main-table colgroup col:nth-child(26) { width: 8% !important; } /* التوقيع */
+
+            .signature-box { min-width: 120px !important; }
+            .signature-box input {
+                font-size: 7px !important;
+                padding: 1mm !important;
+            }
         }
         
         * {
@@ -147,34 +140,34 @@
         
         .header {
             background: linear-gradient(135deg, #2c5aa0 0%, #1e3a5f 100%);
-            padding: 30px;
+            padding: 15px 30px; /* Reduced header padding */
             color: white;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: space-between; /* Space between logo and inputs */
             flex-wrap: nowrap;
-            gap: 30px;
+            gap: 20px;
             position: relative;
         }
         
         .input-section {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            min-width: 250px;
+            gap: 5px; /* Smaller gap */
+            min-width: 200px; /* Adjusted min-width */
         }
         
         .input-section input {
-            padding: 8px 12px;
+            padding: 6px 10px; /* Smaller input padding */
             border: none;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 12px; /* Smaller font size */
             font-family: 'Cairo', sans-serif;
             font-weight: 700;
             background: rgba(255,255,255,0.95);
             color: #333;
             transition: all 0.3s ease;
-            height: 35px;
+            height: 30px; /* Reduced height */
         }
         
         .input-section input:focus {
@@ -189,7 +182,7 @@
         }
         
         .logo {
-            width: 100px;
+            width: 80px; /* Reduced logo size */
             height: auto;
         }
         
@@ -360,8 +353,7 @@
             background: white;
         }
         
-        .main-table th,
-        .main-table td {
+        .main-table th, .main-table td {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: center;
@@ -429,7 +421,7 @@
             padding: 30px;
             background: #f8f9fa;
             display: flex;
-            justify-content: center;
+            justify-content: space-between; /* Space between signature boxes */
             align-items: center;
             flex-wrap: wrap;
             gap: 30px;
@@ -438,8 +430,8 @@
         .signature-box {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            min-width: 300px;
+            gap: 10px; /* Reduced gap */
+            min-width: 250px;
             align-items: center;
         }
         
@@ -456,11 +448,11 @@
         
         .signature-input input {
             flex: 1;
-            padding: 12px;
+            padding: 10px; /* Reduced padding */
             border: 2px solid #ddd;
             border-radius: 8px;
             font-family: 'Cairo', sans-serif;
-            font-size: 16px;
+            font-size: 14px; /* Reduced font size */
             font-weight: 700;
             transition: border-color 0.3s ease;
         }
@@ -518,7 +510,6 @@
             <div class="logo-section">
                 <img src="https://salogos.org/wp-content/uploads/2021/11/UntiTtled-1-1300x988.png" alt="شعار وزارة التعليم" class="logo">
             </div>
-            
             <div class="input-section">
                 <input type="text" id="education-dept" placeholder="أدخل الإدارة التعليمية">
                 <input type="text" id="education-region" placeholder="أدخل المنطقة التعليمية">
@@ -554,6 +545,34 @@
         <!-- Table -->
         <div class="table-container">
             <table class="main-table" id="main-table">
+                <colgroup>
+                    <col style="width: 2.5%;">
+                    <col style="width: 7%;">
+                    <col style="width: 5%;">
+                    <col style="width: 5%;">
+                    <col style="width: 4%;">
+                    <col style="width: 4%;">
+                    <col style="width: 4%;">
+                    <col style="width: 4%;">
+                    <col style="width: 4.5%;">
+                    <col style="width: 4.5%;">
+                    <col style="width: 4.5%;">
+                    <col style="width: 4.5%;">
+                    <col style="width: 4.5%;">
+                    <col style="width: 4.5%;">
+                    <col style="width: 4.5%;">
+                    <col style="width: 4.5%;">
+                    <col style="width: 4.5%;">
+                    <col style="width: 4.5%;">
+                    <col style="width: 4%;">
+                    <col style="width: 4%;">
+                    <col style="width: 4%;">
+                    <col style="width: 4%;">
+                    <col style="width: 4%;">
+                    <col style="width: 4%;">
+                    <col style="width: 4%;">
+                    <col style="width: 8%;">
+                </colgroup>
                 <thead>
                     <tr>
                         <th rowspan="3" class="col-number">م</th>
@@ -570,9 +589,9 @@
                         <th rowspan="2" class="col-elearning-sub">الاختبارات</th>
                         <th rowspan="2" class="col-elearning-sub">دروس<br>معدة</th>
                         <th rowspan="2" class="col-elearning-sub">دروس<br>غير معدة</th>
-                        <th rowspan="2" class="col-commitment-sub">المحافظة على<br>أوقات الدوام</th>
+                        <th rowspan="2" class="col-commitment-sub">المحافظة<br>على الدوام</th>
                         <th rowspan="2" class="col-commitment-sub">الالتزام<br>بزمن الحصص</th>
-                        <th rowspan="2" class="col-commitment-sub">المشاركة في<br>الأنشطة والإذاعة</th>
+                        <th rowspan="2" class="col-commitment-sub">المشاركة في<br>الأنشطة</th>
                         <th rowspan="2" class="col-commitment-sub">المحافظة على<br>البيئة</th>
                         <th rowspan="2" class="col-commitment-sub">التعاون<br>وروح الفريق</th>
                         <th rowspan="2" class="col-growth-sub">مجتمع<br>مهني</th>
@@ -604,18 +623,18 @@
         <div class="footer">
             <div class="signature-box">
                 <div class="signature-input">
-                    <input type="text" id="right-title" placeholder="الصفة">
+                    <input type="text" id="left-title" placeholder="أدخل الصفة">
                 </div>
                 <div class="signature-input">
-                    <input type="text" id="right-name" placeholder="الاسم">
+                    <input type="text" id="left-name" placeholder="أدخل الاسم">
                 </div>
             </div>
             <div class="signature-box">
                 <div class="signature-input">
-                    <input type="text" id="left-title" placeholder="الصفة">
+                    <input type="text" id="right-title" placeholder="أدخل الصفة">
                 </div>
                 <div class="signature-input">
-                    <input type="text" id="left-name" placeholder="الاسم">
+                    <input type="text" id="right-name" placeholder="أدخل الاسم">
                 </div>
             </div>
         </div>
