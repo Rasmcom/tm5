@@ -578,7 +578,7 @@
         }
 
         .pdf-table .col-name {
-            width: 15%; /* Increased width for name column */
+            width: 12%; /* Adjusted width for name column */
         }
 
         .pdf-footer {
@@ -773,42 +773,30 @@
         }
 
         function cleanAndExtractName(text) {
-            // إزالة الأرقام والرموز
-            let cleaned = text.replace(/[0-9\-\:\.\،\,\(\)\[\]\/\\]/g, ' ');
-            
-            // قائمة الكلمات المراد حذفها
-            const wordsToRemove = [
-                'معلم', 'معلمة', 'أستاذ', 'أستاذة', 'دكتور', 'دكتورة', 'مدرس', 'مدرسة',
-                'رياضيات', 'فيزياء', 'كيمياء', 'أحياء', 'عربية', 'انجليزية', 'فرنسية',
-                'تاريخ', 'جغرافيا', 'اجتماعيات', 'تربية', 'إسلامية', 'قرآن', 'حديث',
-                'فقه', 'توحيد', 'حاسوب', 'حاسب', 'آلي', 'تقنية', 'معلومات', 'رقم',
-                'الهوية', 'المؤهل', 'بكالوريوس', 'ماجستير', 'دكتوراه', 'دبلوم',
-                'تخصص', 'قسم', 'كلية', 'جامعة', 'معهد', 'مدرسة', 'ثانوية', 'متوسطة',
-                'ابتدائية', 'روضة', 'أطفال', 'صف', 'فصل', 'مرحلة', 'سنة', 'عام',
-                'الأول', 'الثاني', 'الثالث', 'الرابع', 'الخامس', 'السادس'
-            ];
-            
-            // حذف الكلمات غير المرغوب فيها
-            wordsToRemove.forEach(word => {
-                const regex = new RegExp(word, 'g');
-                cleaned = cleaned.replace(regex, ' ');
-            });
-            
-            // استخراج الكلمات العربية فقط
-            let words = cleaned.split(/\s+/).filter(word => {
-                word = word.trim();
-                if (word.length === 0) return false;
-                return /^[\u0600-\u06FF]+$/.test(word) && word.length >= 2;
-            });
-            
-            // تعديل لاستخراج الاسم الأول والأخير فقط
-            if (words.length >= 2) {
-                return words[0] + " " + words[words.length - 1];
-            } else if (words.length === 1) {
-                return words[0];
+            // Use a more robust regex to extract the name after the ID and before other data
+            const parts = text.split(/\s+/);
+            let name = '';
+            let foundName = false;
+            for (let i = 0; i < parts.length; i++) {
+                // Check if the part is a number (ID or phone number)
+                if (!isNaN(parts[i]) && parts[i].length > 5) {
+                    // If we already found a name, and now we see a number, it means the name ended.
+                    if (foundName) break;
+                    continue; // Skip ID/phone number
+                }
+                // Check if the part is a common job title or subject
+                const commonWords = ['معلم', 'معلمة', 'أستاذ', 'أستاذة', 'دكتور', 'دكتورة', 'مدرس', 'مدرسة', 'رياضيات', 'فيزياء', 'كيمياء', 'أحياء', 'عربي', 'انجليزي', 'فرنسي', 'تاريخ', 'جغرافيا', 'اسلامي', 'قرآن', 'حديث', 'فقه', 'توحيد', 'حاسوب', 'حاسب', 'آلي', 'تقنية', 'معلومات', 'دائم', 'صفوف', 'أولية', 'متوسط', 'ثانوي', 'ابتدائي', 'رياض', 'أطفال', 'مؤهل', 'بكالوريوس', 'ماجستير', 'دكتوراه', 'دبلوم', 'تخصص', 'قسم', 'كلية', 'جامعة', 'معهد'];
+                if (commonWords.includes(parts[i])) {
+                    if (foundName) break; // If we found a name and now a common word, the name ended.
+                    continue;
+                }
+                // If it's not a number or a common word, it's likely part of the name
+                if (parts[i].length > 1 && /^[\u0600-\u06FF]+$/.test(parts[i])) { // Ensure it's Arabic and not too short
+                    name += parts[i] + ' ';
+                    foundName = true;
+                }
             }
-            
-            return '';
+            return name.trim();
         }
 
         function extractNames() {
@@ -894,7 +882,7 @@
             }
         }
 
-        function createPDFPage(names, startIndex, pageNumber) {
+        function createPDFPage(names, startIndex, pageNumber, tableData) {
             const educationDept = document.getElementById('education-dept').value;
             const educationRegion = document.getElementById('education-region').value;
             const schoolName = document.getElementById('school-name').value;
@@ -907,6 +895,33 @@
             const pageDiv = document.createElement('div');
             pageDiv.className = 'pdf-page active';
             
+            let tableRowsHtml = '';
+            for (let i = 0; i < names.length; i++) {
+                const originalRowIndex = startIndex + i;
+                const rowData = tableData[originalRowIndex];
+                
+                let cellsHtml = '';
+                for (let j = 0; j < rowData.length; j++) {
+                    let cellContent = rowData[j];
+                    // Handle checkmark/cross and numbers
+                    if (cellContent === '✅') {
+                        cellsHtml += `<td>&#9989;</td>`;
+                    } else if (cellContent === '❌') {
+                        cellsHtml += `<td>&#10060;</td>`;
+                    } else if (!isNaN(cellContent) && cellContent !== '') { // Check if it's a number
+                        cellsHtml += `<td>${cellContent}</td>`;
+                    } else {
+                        cellsHtml += `<td>${cellContent}</td>`;
+                    }
+                }
+                tableRowsHtml += `<tr><td>${originalRowIndex + 1}</td><td class="col-name-data">${names[i]}</td>${cellsHtml}</tr>`;
+            }
+
+            // Add empty rows if less than 20 names
+            for (let i = names.length; i < 20; i++) {
+                tableRowsHtml += `<tr><td>${startIndex + i + 1}</td><td class="col-name-data"></td>${'<td></td>'.repeat(24)}</tr>`; // 24 empty cells for other columns
+            }
+
             pageDiv.innerHTML = `
                 <div class="pdf-header">
                     <div style="display: flex; flex-direction: column; gap: 2px; font-size: 8px;">
@@ -965,28 +980,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        ${names.map((name, index) => `
-                            <tr>
-                                <td>${startIndex + index + 1}</td>
-                                <td class="col-name-data">${name}</td>
-                                <td></td><td></td><td></td><td></td><td></td><td></td>
-                                <td></td><td></td><td></td><td></td><td></td>
-                                <td></td><td></td><td></td><td></td><td></td>
-                                <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                                <td></td>
-                            </tr>
-                        `).join('')}
-                        ${Array.from({length: Math.max(0, 20 - names.length)}, (_, i) => `
-                            <tr>
-                                <td>${startIndex + names.length + i + 1}</td>
-                                <td class="col-name-data"></td>
-                                <td></td><td></td><td></td><td></td><td></td><td></td>
-                                <td></td><td></td><td></td><td></td><td></td>
-                                <td></td><td></td><td></td><td></td><td></td>
-                                <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                                <td></td>
-                            </tr>
-                        `).join('')}
+                        ${tableRowsHtml}
                     </tbody>
                 </table>
                 
@@ -1006,6 +1000,25 @@
                 alert('يرجى استخراج الأسماء أولاً');
                 return;
             }
+
+            // Get all data from the table
+            const tableRows = document.querySelectorAll('#main-table tbody tr');
+            const tableData = [];
+            tableRows.forEach(row => {
+                const rowCells = [];
+                row.querySelectorAll('td').forEach((cell, index) => {
+                    if (index === 1) { // Name column, already handled by allNames
+                        return;
+                    }
+                    const input = cell.querySelector('input');
+                    if (input) {
+                        rowCells.push(input.value);
+                    } else {
+                        rowCells.push(cell.textContent.trim());
+                    }
+                });
+                tableData.push(rowCells);
+            });
 
             // Hide controls and show loading message
             const controls = document.querySelector('.controls');
@@ -1028,7 +1041,8 @@
                 const pages = [];
                 for (let i = 0; i < allNames.length; i += 20) {
                     const pageNames = allNames.slice(i, i + 20);
-                    const pageDiv = createPDFPage(pageNames, i, Math.floor(i / 20) + 1);
+                    const pageTableData = tableData.slice(i, i + 20);
+                    const pageDiv = createPDFPage(pageNames, i, Math.floor(i / 20) + 1, pageTableData);
                     pagesContainer.appendChild(pageDiv);
                     pages.push(pageDiv);
                 }
