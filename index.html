@@ -6,7 +6,123 @@
     <title>سجل متابعة المعلمين</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* General Styles for the Web Page */
+        /* A4 landscape print styles */
+        @page {
+            size: A4 landscape;
+            margin: 8mm;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            
+            html, body {
+                width: 100% !important;
+                height: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                overflow: hidden; /* Prevent scrollbars in print */
+            }
+            
+            .container {
+                width: 100% !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                background: white !important;
+                transform: scale(1) !important; /* Adjusted scale to be 1 */
+                transform-origin: top left !important;
+            }
+            
+            .main-table {
+                width: 100% !important;
+                margin: 0 !important;
+                font-size: 8px !important; /* Smaller font size */
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                table-layout: fixed !important; /* Fixed table layout is crucial */
+                border-collapse: collapse !important;
+            }
+            
+            .main-table th,
+            .main-table td {
+                padding: 3px !important;
+                font-size: 7px !important; /* Even smaller font size for cells */
+                border: 0.5px solid #000 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                text-align: center !important;
+                vertical-align: middle !important;
+            }
+            
+            .main-table th {
+                font-size: 6px !important; /* Smallest font for headers */
+                color: white !important;
+                font-weight: bold !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            /* Explicitly set column widths for fixed layout */
+            .main-table th:nth-child(1) { width: 3% !important; } /* م */
+            .main-table th:nth-child(2) { width: 12% !important; } /* الاسم */
+            .main-table th:nth-child(3), .main-table th:nth-child(4) { width: 5% !important; } /* تحضير الدروس */
+            .main-table th:nth-child(5) { width: 5% !important; } /* الأنشطة */
+            .main-table th:nth-child(6) { width: 5% !important; } /* الاختبارات */
+            .main-table th:nth-child(7) { width: 5% !important; } /* دروس معدة */
+            .main-table th:nth-child(8) { width: 5% !important; } /* دروس غير معدة */
+            .main-table th:nth-child(9), .main-table th:nth-child(10), .main-table th:nth-child(11), .main-table th:nth-child(12), .main-table th:nth-child(13) { width: 4% !important; } /* الالتزام */
+            .main-table th:nth-child(14), .main-table th:nth-child(15), .main-table th:nth-child(16), .main-table th:nth-child(17), .main-table th:nth-child(18) { width: 4% !important; } /* النمو */
+            .main-table th:nth-child(19), .main-table th:nth-child(20), .main-table th:nth-child(21) { width: 4% !important; } /* التحصيل */
+            .main-table th:nth-child(22), .main-table th:nth-child(23), .main-table th:nth-child(24), .main-table th:nth-child(25) { width: 4% !important; } /* التقويم */
+            .main-table th:nth-child(26) { width: 8% !important; } /* التوقيع */
+
+            .main-table input {
+                font-size: 7px !important;
+                padding: 1px !important;
+                border: none !important;
+                background: transparent !important;
+                width: 100% !important;
+                text-align: center !important;
+            }
+            
+            .header, .title-section, .footer {
+                padding: 3mm !important;
+                width: 100% !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            .main-title { font-size: 12px !important; }
+            .month-input { font-size: 12px !important; }
+            .logo { width: 15mm !important; height: auto !important; }
+            .input-section input, .signature-input input {
+                font-size: 8px !important;
+                padding: 1mm !important;
+                height: auto !important;
+            }
+
+            /* Column Colors */
+            .col-number { background: #6c757d !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .col-name { background: #495057 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .col-elearning { background: #007bff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .col-elearning-sub { background: #66b3ff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .col-elearning-subsub { background: #b3d9ff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .col-elearning-subsub[style*="color: #1e3a5f"] { color: #1e3a5f !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .col-commitment { background: #28a745 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .col-commitment-sub { background: #66d966 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .col-growth { background: #ffc107 !important; color: #333 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .col-growth-sub { background: #ffdb66 !important; color: #333 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .col-achievement { background: #dc3545 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .col-achievement-sub { background: #ff6b7a !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .col-achievement-subsub { background: #ffb3ba !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .col-signature { background: #6f42c1 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -89,6 +205,10 @@
             display: flex;
             justify-content: center;
             gap: 20px;
+        }
+        
+        @media print {
+            .gender-selection { display: none !important; }
         }
         
         .gender-btn {
@@ -221,6 +341,15 @@
         .table-container {
             padding: 30px;
             overflow-x: auto;
+        }
+        
+        @media print {
+            .table-container {
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                overflow: visible !important;
+            }
         }
         
         .main-table {
@@ -380,204 +509,6 @@
                 font-size: 20px;
             }
         }
-
-        /* Print-specific Styles */
-        @media print {
-            body {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                font-family: 'Cairo', sans-serif;
-                margin: 0;
-            }
-
-            @page {
-                size: A4 landscape;
-                margin: 0;
-            }
-
-            .no-print {
-                display: none !important;
-            }
-
-            .container {
-                width: 100%;
-                height: 100%;
-                padding: 5mm;
-                box-shadow: none;
-                background: white;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                page-break-after: always; /* Add page break for multiple pages */
-            }
-
-            .header, .title-section {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 0;
-                background: none;
-                color: black;
-                border-bottom: none;
-                margin-bottom: 5mm;
-                width: 100%;
-                flex-direction: row;
-            }
-
-            .header .logo-section {
-                order: 1;
-                width: 25%;
-                justify-content: flex-start;
-            }
-
-            .header .input-section {
-                order: 3;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 1mm;
-            }
-
-            .title-section {
-                order: 2;
-                flex-grow: 1;
-                text-align: center;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .title-section .main-title {
-                font-size: 12pt;
-                font-weight: 700;
-                color: #333;
-                margin: 0;
-            }
-
-            .title-section .month-input {
-                font-size: 12pt;
-                border: none;
-                min-width: 20mm;
-                padding: 0 2mm;
-                text-align: center;
-                background: transparent;
-                border-bottom: 2px solid #2c5aa0;
-            }
-
-            .header .input-section input {
-                font-size: 7pt;
-                padding: 1mm;
-                border: 1px solid #999;
-                background: transparent;
-                height: auto;
-                width: 50mm;
-                text-align: right;
-            }
-            
-            .header .logo {
-                width: 20mm;
-            }
-
-            .main-table {
-                width: 100%;
-                border-collapse: collapse;
-                font-size: 6pt;
-                table-layout: fixed;
-                margin-top: 10mm; /* Space between title and table */
-            }
-            
-            .main-table th, .main-table td {
-                border: 1px solid #333;
-                padding: 0.5mm 1mm;
-                text-align: center;
-                vertical-align: middle;
-            }
-
-            .main-table th {
-                font-size: 6pt;
-                word-wrap: break-word; /* Ensure text wraps in headers */
-            }
-
-            .main-table td {
-                font-size: 7pt;
-            }
-
-            .main-table th.col-elearning-subsub,
-            .main-table th.col-achievement-subsub {
-                font-size: 5pt; /* Smaller font for sub-headers */
-            }
-
-            .main-table th.col-number, .main-table td:first-child { width: 5mm; }
-            .main-table th.col-name, .main-table td:nth-child(2) { width: 35mm; }
-            .main-table th.col-signature, .main-table td:last-child { width: 25mm; }
-
-            .main-table input {
-                font-size: 5pt;
-                padding: 0.5mm;
-                border: none;
-                background: transparent;
-                width: 100%;
-            }
-
-            .check-cell { font-size: 8pt; }
-
-            .footer {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-end;
-                padding: 5mm 0;
-                background: none;
-                border-top: 2px solid #2c5aa0;
-                margin-top: 5mm;
-                width: 100%;
-            }
-
-            .signature-box {
-                flex-direction: row;
-                align-items: center;
-                gap: 5mm;
-                min-width: unset;
-                flex: 1;
-                justify-content: flex-end;
-            }
-            
-            .signature-box:nth-child(2) {
-                justify-content: flex-start;
-            }
-
-            .signature-input {
-                gap: 3mm;
-                width: auto;
-            }
-
-            .signature-input input {
-                font-size: 7pt;
-                padding: 1mm;
-                border: 1px solid #999;
-                background: transparent;
-                width: 40mm;
-                text-align: right;
-            }
-
-            .signature-input input::placeholder {
-                color: #ccc;
-            }
-            
-            /* Column Colors (for printing) */
-            .col-number { background: #6c757d !important; color: white !important; }
-            .col-name { background: #495057 !important; color: white !important; }
-            .col-elearning { background: #007bff !important; color: white !important; }
-            .col-elearning-sub { background: #66b3ff !important; color: white !important; }
-            .col-elearning-subsub { background: #b3d9ff !important; color: #1e3a5f !important; }
-            .col-commitment { background: #28a745 !important; color: white !important; }
-            .col-commitment-sub { background: #66d966 !important; color: white !important; }
-            .col-growth { background: #ffc107 !important; color: #333 !important; }
-            .col-growth-sub { background: #ffdb66 !important; color: #333 !important; }
-            .col-achievement { background: #dc3545 !important; color: white !important; }
-            .col-achievement-sub { background: #ff6b7a !important; color: white !important; }
-            .col-achievement-subsub { background: #ffb3ba !important; color: white !important; }
-            .col-signature { background: #6f42c1 !important; color: white !important; }
-        }
     </style>
 </head>
 <body>
@@ -589,22 +520,22 @@
             </div>
             
             <div class="input-section">
-                <input type="text" id="education-dept" placeholder="أدخل الإدارة التعليمية" style="font-family: 'Cairo', sans-serif;">
-                <input type="text" id="education-region" placeholder="أدخل المنطقة التعليمية" style="font-family: 'Cairo', sans-serif;">
-                <input type="text" id="school-name" placeholder="أدخل المدرسة" style="font-family: 'Cairo', sans-serif;">
+                <input type="text" id="education-dept" placeholder="أدخل الإدارة التعليمية">
+                <input type="text" id="education-region" placeholder="أدخل المنطقة التعليمية">
+                <input type="text" id="school-name" placeholder="أدخل المدرسة">
             </div>
         </div>
         
         <!-- Title Section -->
         <div class="title-section">
-            <div class="gender-selection no-print">
+            <div class="gender-selection">
                 <button class="gender-btn active" onclick="selectGender('male')">معلم</button>
                 <button class="gender-btn" onclick="selectGender('female')">معلمة</button>
             </div>
             
             <div class="main-title" id="main-title">
                 سجل متابعة المعلم للعام الدراسي خلال شهر 
-                <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="" style="font-family: 'Cairo', sans-serif;">
+                <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">
             </div>
         </div>
         
@@ -616,7 +547,7 @@
             </div>
             <div class="btn-group">
                 <button class="btn btn-primary" onclick="extractNames()">استخراج الأسماء</button>
-                <button class="btn btn-success" onclick="printPage()">🖨️ طباعة مباشرة</button>
+                <button class="btn btn-success" onclick="window.print()">🖨️ طباعة مباشرة</button>
             </div>
         </div>
         
@@ -627,39 +558,39 @@
                     <tr>
                         <th rowspan="3" class="col-number">م</th>
                         <th rowspan="3" class="col-name" id="name-column-header">اسم المعلم</th>
-                        <th colspan="6" class="col-elearning">التعليم الإلكتروني (مدرستي)</th>
-                        <th colspan="5" class="col-commitment">معايير الالتزام الوظيفي</th>
-                        <th colspan="5" class="col-growth">معايير النمو المهني</th>
-                        <th colspan="7" class="col-achievement">متابعة التحصيل الدراسي</th>
-                        <th rowspan="3" class="col-signature">توقيع المعلم/ـة بالاطلاع</th>
+                        <th colspan="6" class="col-elearning">التعليم الإلكتروني</th>
+                        <th colspan="5" class="col-commitment">الالتزام الوظيفي</th>
+                        <th colspan="5" class="col-growth">النمو المهني</th>
+                        <th colspan="7" class="col-achievement">متابعة التحصيل</th>
+                        <th rowspan="3" class="col-signature">توقيع المعلم/ـة</th>
                     </tr>
                     <tr>
                         <th colspan="2" class="col-elearning-sub">تحضير الدروس</th>
                         <th rowspan="2" class="col-elearning-sub">الأنشطة</th>
                         <th rowspan="2" class="col-elearning-sub">الاختبارات</th>
-                        <th rowspan="2" class="col-elearning-sub">الدروس المعدة</th>
-                        <th rowspan="2" class="col-elearning-sub">الدروس غير المعدة</th>
-                        <th rowspan="2" class="col-commitment-sub">المحافظة على أوقات الدوام</th>
-                        <th rowspan="2" class="col-commitment-sub">الالتزام بزمن الحصص</th>
-                        <th rowspan="2" class="col-commitment-sub">المشاركة في الأنشطة والإذاعة</th>
-                        <th rowspan="2" class="col-commitment-sub">المحافظة على البيئة</th>
-                        <th rowspan="2" class="col-commitment-sub">التعاون وروح الفريق</th>
-                        <th rowspan="2" class="col-growth-sub">مجتمع مهني</th>
-                        <th rowspan="2" class="col-growth-sub">زيارة تبادلية</th>
-                        <th rowspan="2" class="col-growth-sub">ورشة عمل</th>
-                        <th rowspan="2" class="col-growth-sub">درس تطبيقي</th>
+                        <th rowspan="2" class="col-elearning-sub">دروس<br>معدة</th>
+                        <th rowspan="2" class="col-elearning-sub">دروس<br>غير معدة</th>
+                        <th rowspan="2" class="col-commitment-sub">المحافظة على<br>أوقات الدوام</th>
+                        <th rowspan="2" class="col-commitment-sub">الالتزام<br>بزمن الحصص</th>
+                        <th rowspan="2" class="col-commitment-sub">المشاركة في<br>الأنشطة والإذاعة</th>
+                        <th rowspan="2" class="col-commitment-sub">المحافظة على<br>البيئة</th>
+                        <th rowspan="2" class="col-commitment-sub">التعاون<br>وروح الفريق</th>
+                        <th rowspan="2" class="col-growth-sub">مجتمع<br>مهني</th>
+                        <th rowspan="2" class="col-growth-sub">زيارة<br>تبادلية</th>
+                        <th rowspan="2" class="col-growth-sub">ورشة<br>عمل</th>
+                        <th rowspan="2" class="col-growth-sub">درس<br>تطبيقي</th>
                         <th rowspan="2" class="col-growth-sub">استراتيجيات</th>
-                        <th rowspan="2" class="col-achievement-sub">الاختبارات التشخيصية</th>
-                        <th rowspan="2" class="col-achievement-sub">تحليل النتائج</th>
-                        <th rowspan="2" class="col-achievement-sub">الخطط العلاجية</th>
+                        <th rowspan="2" class="col-achievement-sub">اختبارات<br>تشخيصية</th>
+                        <th rowspan="2" class="col-achievement-sub">تحليل<br>النتائج</th>
+                        <th rowspan="2" class="col-achievement-sub">الخطط<br>العلاجية</th>
                         <th colspan="4" class="col-achievement-sub">تنوع أساليب التقويم</th>
                     </tr>
                     <tr>
-                        <th class="col-elearning-subsub" style="color: #1e3a5f;">ملائم للخطة</th>
-                        <th class="col-elearning-subsub" style="color: #1e3a5f;">مستوفي العناصر</th>
-                        <th class="col-achievement-subsub">اختبارات قصيرة</th>
-                        <th class="col-achievement-subsub">ملف الإنجاز</th>
-                        <th class="col-achievement-subsub">واجبات إضافية</th>
+                        <th class="col-elearning-subsub" style="color: #1e3a5f;">ملائم<br>للخطة</th>
+                        <th class="col-elearning-subsub" style="color: #1e3a5f;">مستوفي<br>العناصر</th>
+                        <th class="col-achievement-subsub">اختبارات<br>قصيرة</th>
+                        <th class="col-achievement-subsub">ملف<br>إنجاز</th>
+                        <th class="col-achievement-subsub">واجبات<br>إضافية</th>
                         <th class="col-achievement-subsub">مشاريع</th>
                     </tr>
                 </thead>
@@ -672,23 +603,19 @@
         <!-- Footer -->
         <div class="footer">
             <div class="signature-box">
-                <label for="right-title" class="no-print">الصفة</label>
                 <div class="signature-input">
-                    <input type="text" id="right-title" placeholder="الصفة" style="font-family: 'Cairo', sans-serif;">
+                    <input type="text" id="right-title" placeholder="الصفة">
                 </div>
-                <label for="right-name" class="no-print">الاسم</label>
                 <div class="signature-input">
-                    <input type="text" id="right-name" placeholder="الاسم" style="font-family: 'Cairo', sans-serif;">
+                    <input type="text" id="right-name" placeholder="الاسم">
                 </div>
             </div>
             <div class="signature-box">
-                <label for="left-title" class="no-print">الصفة</label>
                 <div class="signature-input">
-                    <input type="text" id="left-title" placeholder="الصفة" style="font-family: 'Cairo', sans-serif;">
+                    <input type="text" id="left-title" placeholder="الصفة">
                 </div>
-                <label for="left-name" class="no-print">الاسم</label>
                 <div class="signature-input">
-                    <input type="text" id="left-name" placeholder="الاسم" style="font-family: 'Cairo', sans-serif;">
+                    <input type="text" id="left-name" placeholder="الاسم">
                 </div>
             </div>
         </div>
@@ -698,315 +625,108 @@
         let currentGender = 'male';
         let rowCounter = 0;
 
-        function printPage() {
-            const educationDept = document.getElementById('education-dept').value;
-            const educationRegion = document.getElementById('education-region').value;
-            const schoolName = document.getElementById('school-name').value;
-            const monthInput = document.getElementById('month-input').value;
-            const rightTitle = document.getElementById('right-title').value;
-            const rightName = document.getElementById('right-name').value;
-            const leftTitle = document.getElementById('left-title').value;
-            const leftName = document.getElementById('left-name').value;
-
-            // Update the placeholders with current values for printing
-            const tempContainer = document.createElement('div');
-            tempContainer.innerHTML = document.getElementById('record-page').innerHTML;
-
-            tempContainer.querySelector('#education-dept').setAttribute('value', educationDept);
-            tempContainer.querySelector('#education-region').setAttribute('value', educationRegion);
-            tempContainer.querySelector('#school-name').setAttribute('value', schoolName);
-            tempContainer.querySelector('#month-input').setAttribute('value', monthInput);
-            tempContainer.querySelector('#right-title').setAttribute('value', rightTitle);
-            tempContainer.querySelector('#right-name').setAttribute('value', rightName);
-            tempContainer.querySelector('#left-title').setAttribute('value', leftTitle);
-            tempContainer.querySelector('#left-name').setAttribute('value', leftName);
-            
-            const content = tempContainer.innerHTML;
-
-            const printWindow = window.open('', '_blank');
-            if (!printWindow) {
-                alert('يرجى السماح بفتح النوافذ المنبثقة لتمكين الطباعة.');
-                return;
-            }
-
-            const printCSS = `
-                @page {
-                    size: A4 landscape;
-                    margin: 0;
-                }
-
-                @media print {
-                    body {
-                        -webkit-print-color-adjust: exact;
-                        print-color-adjust: exact;
-                        font-family: 'Cairo', sans-serif;
-                        margin: 0;
-                    }
-
-                    .no-print {
-                        display: none !important;
-                    }
-
-                    .container {
-                        width: 100%;
-                        height: 100%;
-                        padding: 5mm;
-                        box-shadow: none;
-                        background: white;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: space-between;
-                        page-break-after: always;
-                    }
-
-                    .header, .title-section {
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        padding: 0;
-                        background: none;
-                        color: black;
-                        border-bottom: none;
-                        margin-bottom: 5mm;
-                        width: 100%;
-                        flex-direction: row;
-                    }
-
-                    .header .logo-section {
-                        order: 1;
-                        width: 25%;
-                        justify-content: flex-start;
-                    }
-
-                    .header .input-section {
-                        order: 3;
-                        display: flex;
-                        flex-direction: column;
-                        align-items: flex-end;
-                        gap: 1mm;
-                    }
-
-                    .title-section {
-                        order: 2;
-                        flex-grow: 1;
-                        text-align: center;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    }
-
-                    .title-section .main-title {
-                        font-size: 12pt;
-                        font-weight: 700;
-                        color: #333;
-                        margin: 0;
-                    }
-
-                    .title-section .month-input {
-                        font-size: 12pt;
-                        border: none;
-                        min-width: 20mm;
-                        padding: 0 2mm;
-                        text-align: center;
-                        background: transparent;
-                        border-bottom: 2px solid #2c5aa0;
-                    }
-
-                    .header .input-section input {
-                        font-size: 7pt;
-                        padding: 1mm;
-                        border: 1px solid #999;
-                        background: transparent;
-                        height: auto;
-                        width: 50mm;
-                        text-align: right;
-                    }
-                    
-                    .header .logo {
-                        width: 20mm;
-                    }
-
-                    .main-table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        font-size: 6pt;
-                        table-layout: fixed;
-                        margin-top: 10mm;
-                    }
-                    
-                    .main-table th, .main-table td {
-                        border: 1px solid #333;
-                        padding: 0.5mm 1mm;
-                        text-align: center;
-                        vertical-align: middle;
-                    }
-
-                    .main-table th {
-                        font-size: 6pt;
-                        word-wrap: break-word;
-                    }
-
-                    .main-table td {
-                        font-size: 7pt;
-                    }
-
-                    .main-table th.col-elearning-subsub,
-                    .main-table th.col-achievement-subsub {
-                        font-size: 5pt;
-                    }
-
-                    .main-table th.col-number, .main-table td:first-child { width: 5mm; }
-                    .main-table th.col-name, .main-table td:nth-child(2) { width: 35mm; }
-                    .main-table th.col-signature, .main-table td:last-child { width: 25mm; }
-
-                    .main-table input {
-                        font-size: 5pt;
-                        padding: 0.5mm;
-                        border: none;
-                        background: transparent;
-                        width: 100%;
-                    }
-
-                    .check-cell { font-size: 8pt; }
-
-                    .footer {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: flex-end;
-                        padding: 5mm 0;
-                        background: none;
-                        border-top: 2px solid #2c5aa0;
-                        margin-top: 5mm;
-                        width: 100%;
-                    }
-
-                    .signature-box {
-                        flex-direction: row;
-                        align-items: center;
-                        gap: 5mm;
-                        min-width: unset;
-                        flex: 1;
-                        justify-content: flex-end;
-                    }
-                    
-                    .signature-box:nth-child(2) {
-                        justify-content: flex-start;
-                    }
-
-                    .signature-input {
-                        gap: 3mm;
-                        width: auto;
-                    }
-
-                    .signature-input input {
-                        font-size: 7pt;
-                        padding: 1mm;
-                        border: 1px solid #999;
-                        background: transparent;
-                        width: 40mm;
-                        text-align: right;
-                    }
-
-                    .signature-input input::placeholder {
-                        color: transparent;
-                    }
-                    
-                    .col-number { background: #6c757d !important; color: white !important; }
-                    .col-name { background: #495057 !important; color: white !important; }
-                    .col-elearning { background: #007bff !important; color: white !important; }
-                    .col-elearning-sub { background: #66b3ff !important; color: white !important; }
-                    .col-elearning-subsub { background: #b3d9ff !important; color: #1e3a5f !important; }
-                    .col-commitment { background: #28a745 !important; color: white !important; }
-                    .col-commitment-sub { background: #66d966 !important; color: white !important; }
-                    .col-growth { background: #ffc107 !important; color: #333 !important; }
-                    .col-growth-sub { background: #ffdb66 !important; color: #333 !important; }
-                    .col-achievement { background: #dc3545 !important; color: white !important; }
-                    .col-achievement-sub { background: #ff6b7a !important; color: white !important; }
-                    .col-achievement-subsub { background: #ffb3ba !important; color: white !important; }
-                    .col-signature { background: #6f42c1 !important; color: white !important; }
-                }
-            `;
-
-            printWindow.document.open();
-            printWindow.document.write(`
-                <html>
-                <head>
-                    <title>سجل متابعة المعلمين - للطباعة</title>
-                    <style>${printCSS}</style>
-                    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-                </head>
-                <body>
-                    <div class="container">${content}</div>
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-
-            printWindow.onload = () => {
-                printWindow.print();
-                printWindow.onafterprint = () => {
-                    printWindow.close();
-                };
-            };
-        }
-
         function selectGender(gender) {
             currentGender = gender;
+            
+            // Update button states
             document.querySelectorAll('.gender-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
+            
+            // Update title and column header
             const title = document.getElementById('main-title');
             const columnHeader = document.getElementById('name-column-header');
+            
             if (gender === 'male') {
-                title.innerHTML = 'سجل متابعة المعلم للعام الدراسي خلال شهر <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="" style="font-family: \'Cairo\', sans-serif;">';
+                title.innerHTML = 'سجل متابعة المعلم للعام الدراسي خلال شهر <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">';
                 columnHeader.textContent = 'اسم المعلم';
             } else {
-                title.innerHTML = 'سجل متابعة المعلمات للعام الدراسي خلال شهر <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="" style="font-family: \'Cairo\', sans-serif;">';
+                title.innerHTML = 'سجل متابعة المعلمات للعام الدراسي خلال شهر <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">';
                 columnHeader.textContent = 'اسم المعلمة';
             }
         }
 
-        function cleanAndExtractName(text) {
-            const segments = text.split(/\s+/);
-            const arabicWords = [];
-            for (const segment of segments) {
-                if (/^[\u0600-\u06FF]+$/.test(segment)) {
-                    arabicWords.push(segment);
-                } else if (arabicWords.length > 0) {
-                    break;
-                }
-            }
+        function extractFirstAndLast(fullName) {
+            // إزالة المسافات الزائدة
+            fullName = fullName.trim();
+            
+            // تقسيم النص باستخدام المسافة
+            let parts = fullName.split(/\s+/);
 
-            if (arabicWords.length >= 2) {
-                const firstName = arabicWords[0];
-                const lastName = arabicWords[arabicWords.length - 1];
-                return `${firstName} ${lastName}`;
-            } else if (arabicWords.length === 1) {
-                return arabicWords[0];
+            // الاحتفاظ فقط بأول وآخر كلمة
+            if (parts.length >= 2) {
+                return parts[0] + " " + parts[parts.length - 1];
+            } else {
+                return fullName; // إذا الاسم كلمة واحدة
             }
+        }
+
+        function cleanAndExtractName(text) {
+            // إزالة الأرقام والرموز
+            let cleaned = text.replace(/[0-9\-\:\.\،\,\(\)\[\]\/\\]/g, ' ');
+            
+            // إزالة الكلمات غير المرغوبة
+            const unwantedWords = [
+                'التخصص', 'رقم', 'الهوية', 'السجل', 'المادة', 'المؤهل', 'القسم', 'المرحلة',
+                'المعلم', 'المعلمة', 'الأستاذ', 'مشرف', 'معلم', 'معلمة', 'أستاذ', 'دكتور',
+                'بكالوريوس', 'ماجستير', 'دكتوراه', 'رياضيات', 'عربية', 'إنجليزية', 'علوم',
+                'تاريخ', 'جغرافيا', 'فيزياء', 'كيمياء', 'أحياء', 'حاسوب', 'تربية', 'إسلامية',
+                'فنية', 'بدنية', 'اجتماعيات', 'لغة', 'الرياضيات', 'العلوم', 'التاريخ',
+                'الجغرافيا', 'الفيزياء', 'الكيمياء', 'الأحياء', 'الحاسوب', 'التربية',
+                'دائم', 'مؤقت', 'بديل'
+            ];
+            
+            unwantedWords.forEach(word => {
+                const regex = new RegExp(word, 'g');
+                cleaned = cleaned.replace(regex, ' ');
+            });
+            
+            // استخراج الكلمات العربية فقط
+            let words = cleaned.split(/\s+/).filter(word => {
+                word = word.trim();
+                if (word.length === 0) return false;
+                return /^[\u0600-\u06FF]+$/.test(word) && word.length >= 2;
+            });
+            
+            if (words.length >= 4) {
+                // الاسم الأول + مسافة + الاسم الرابع (حذف الثاني والثالث)
+                return words[0] + " " + words[3];
+            } else if (words.length >= 2) {
+                // الاسم الأول + الأخير
+                return words[0] + " " + words[words.length - 1];
+            } else if (words.length === 1) {
+                return words[0];
+            }
+            
             return '';
         }
 
         function extractNames() {
             const textarea = document.getElementById('names-textarea');
             const lines = textarea.value.split('\n').filter(line => line.trim() !== '');
+            
             if (lines.length === 0) {
                 alert('يرجى إدخال أسماء المعلمين أولاً');
                 return;
             }
+            
+            // Clear existing rows
             document.getElementById('table-body').innerHTML = '';
             rowCounter = 0;
+            
             lines.forEach(line => {
                 const extractedName = cleanAndExtractName(line);
                 if (extractedName) {
                     addTableRow(extractedName);
                 }
             });
+            
             if (rowCounter === 0) {
                 alert('لم يتم العثور على أسماء صحيحة. تأكد من تنسيق البيانات');
                 return;
             }
+            
             textarea.value = '';
             alert(`تم استخراج ${rowCounter} اسم بنجاح!`);
         }
@@ -1015,9 +735,10 @@
             rowCounter++;
             const tbody = document.getElementById('table-body');
             const row = document.createElement('tr');
+            
             row.innerHTML = `
                 <td>${rowCounter}</td>
-                <td><input type="text" value="${name}" style="font-family: 'Cairo', sans-serif;"></td>
+                <td><input type="text" value="${name}"></td>
                 <td class="check-cell" onclick="toggleCheck(this)"></td>
                 <td class="check-cell" onclick="toggleCheck(this)"></td>
                 <td><input type="number" min="0" value="0"></td>
@@ -1041,13 +762,15 @@
                 <td class="check-cell" onclick="toggleCheck(this)"></td>
                 <td class="check-cell" onclick="toggleCheck(this)"></td>
                 <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td><input type="text" style="font-family: 'Cairo', sans-serif;"></td>
+                <td><input type="text"></td>
             `;
+            
             tbody.appendChild(row);
         }
 
         function toggleCheck(cell) {
             const currentContent = cell.textContent.trim();
+            
             if (currentContent === '') {
                 cell.textContent = '✅';
                 cell.style.backgroundColor = '#d4edda';
@@ -1060,6 +783,7 @@
             }
         }
 
+        // Initialize with current month
         window.onload = function() {
             const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
                           'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
@@ -1069,3 +793,4 @@
     </script>
 </body>
 </html>
+
