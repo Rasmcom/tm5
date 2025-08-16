@@ -3,183 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سجل متابعة المعلمين</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <title>سجل متابعة المعلم</title>
+    <!-- تضمين مكتبة Tailwind CSS من خلال CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @page { size: A4 landscape; margin: 0; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100% ); min-height: 100vh; padding: 20px; }
-        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
-        .header { background: linear-gradient(135deg, #2c5aa0 0%, #1e3a5f 100%); padding: 30px; color: white; display: flex; align-items: center; justify-content: flex-start; flex-wrap: nowrap; gap: 30px; }
-        .logo { width: 100px; height: auto; }
-        .input-section { display: flex; flex-direction: column; gap: 8px; min-width: 250px; }
-        .input-section input { padding: 8px 12px; border: none; border-radius: 6px; font-size: 14px; font-weight: 700; background: rgba(255,255,255,0.95); color: #333; height: 35px; }
-        .title-section { padding: 30px; text-align: center; background: #f8f9fa; border-bottom: 3px solid #2c5aa0; }
-        .gender-selection { margin-bottom: 25px; display: flex; justify-content: center; gap: 20px; }
-        .gender-btn { padding: 15px 30px; border: 2px solid #2c5aa0; background: white; color: #2c5aa0; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.3s ease; }
-        .gender-btn.active { background: #2c5aa0; color: white; }
-        .main-title { font-size: 32px; font-weight: 700; color: #333; margin-bottom: 10px; }
-        .month-input { display: inline-block; border: none; border-bottom: 3px solid #2c5aa0; background: transparent; font-size: 28px; font-weight: 700; color: #2c5aa0; text-align: center; min-width: 150px; padding: 8px; }
-        .controls { padding: 25px 30px; background: #f8f9fa; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; }
-        .names-input { flex: 1; min-width: 350px; }
-        .names-input label { display: block; margin-bottom: 12px; font-weight: 600; font-size: 16px; color: #333; }
-        .names-input textarea { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; resize: vertical; min-height: 120px; }
-        .btn { padding: 15px 30px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.3s ease; }
-        .btn-primary { background: #2c5aa0; color: white; }
-        .btn-success { background: #28a745; color: white; }
-        .btn-group { display: flex; flex-direction: column; gap: 15px; }
-        .table-container { padding: 30px; overflow-x: auto; }
-        .main-table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; }
-        .main-table th, .main-table td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
-        .main-table th { font-weight: 600; color: white; font-size: 12px; }
-        .col-number { background: #6c757d; } .col-name { background: #495057; } .col-elearning { background: #007bff; } .col-elearning-sub { background: #66b3ff; } .col-elearning-subsub { background: #b3d9ff; } .col-commitment { background: #28a745; } .col-commitment-sub { background: #66d966; } .col-growth { background: #ffc107; color: #333; } .col-growth-sub { background: #ffdb66; color: #333; } .col-achievement { background: #dc3545; } .col-achievement-sub { background: #ff6b7a; } .col-achievement-subsub { background: #ffb3ba; } .col-signature { background: #6f42c1; }
-        .main-table input[type="number"] { width: 70px; padding: 8px; border: 1px solid #ddd; border-radius: 5px; text-align: center; font-size: 14px; }
-        .main-table input[type="text"] { width: 140px; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
-        .check-cell { cursor: pointer; font-size: 18px; padding: 12px; min-width: 50px; }
-        .footer { padding: 30px; background: #f8f9fa; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 30px; }
-        .signature-box { display: flex; flex-direction: column; gap: 15px; min-width: 300px; align-items: center; }
-        .signature-input { display: flex; align-items: center; gap: 15px; width: 100%; }
-        .signature-input input { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: 700; }
-    </style>
-</head>
-<body>
-    <div class="container" id="record-page">
-        <div class="header">
-            <div class="logo-section"><img src="https://salogos.org/wp-content/uploads/2021/11/UntiTtled-1-1300x988.png" alt="شعار وزارة التعليم" class="logo"></div>
-            <div class="input-section">
-                <input type="text" id="education-dept" placeholder="أدخل الإدارة التعليمية">
-                <input type="text" id="education-region" placeholder="أدخل المنطقة التعليمية">
-                <input type="text" id="school-name" placeholder="أدخل المدرسة">
-            </div>
-        </div>
-        <div class="title-section">
-            <div class="gender-selection no-print">
-                <button class="gender-btn active" onclick="selectGender('male', event )">معلم</button>
-                <button class="gender-btn" onclick="selectGender('female', event)">معلمة</button>
-            </div>
-            <div class="main-title" id="main-title">سجل متابعة المعلم للعام الدراسي خلال شهر <input type="text" class="month-input" id="month-input" placeholder="الشهر"></div>
-        </div>
-        <div class="controls no-print">
-            <div class="names-input">
-                <label>الصق بيانات المعلمين/المعلمات هنا:</label>
-                <textarea id="names-textarea" placeholder="1- أحمد محمد..."></textarea>
-            </div>
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="extractNames()">استخراج الأسماء</button>
-                <button class="btn btn-success" onclick="savePDF(event)">حفظ PDF</button>
-            </div>
-        </div>
-        <div class="table-container">
-            <table class="main-table" id="main-table">
-                <thead>
-                    <tr>
-                        <th rowspan="3" class="col-number">م</th><th rowspan="3" class="col-name" id="name-column-header">اسم المعلم</th><th colspan="6" class="col-elearning">التعليم الإلكتروني (مدرستي)</th><th colspan="5" class="col-commitment">معايير الالتزام الوظيفي</th><th colspan="5" class="col-growth">معايير النمو المهني</th><th colspan="7" class="col-achievement">متابعة التحصيل الدراسي</th><th rowspan="3" class="col-signature">توقيع المعلم/ـة</th>
-                    </tr>
-                    <tr>
-                        <th colspan="2" class="col-elearning-sub">تحضير الدروس</th><th rowspan="2" class="col-elearning-sub">عدد الأنشطة</th><th rowspan="2" class="col-elearning-sub">الاختبارات</th><th rowspan="2" class="col-elearning-sub">الدروس المعدة</th><th rowspan="2" class="col-elearning-sub">غير المعدة</th><th rowspan="2" class="col-commitment-sub">أوقات الدوام</th><th rowspan="2" class="col-commitment-sub">زمن الحصص</th><th rowspan="2" class="col-commitment-sub">المشاركة</th><th rowspan="2" class="col-commitment-sub">البيئة</th><th rowspan="2" class="col-commitment-sub">التعاون</th><th rowspan="2" class="col-growth-sub">مجتمع مهني</th><th rowspan="2" class="col-growth-sub">زيارة تبادلية</th><th rowspan="2" class="col-growth-sub">ورشة عمل</th><th rowspan="2" class="col-growth-sub">درس تطبيقي</th><th rowspan="2" class="col-growth-sub">استراتيجيات</th><th rowspan="2" class="col-achievement-sub">التشخيصية</th><th rowspan="2" class="col-achievement-sub">تحليل النتائج</th><th rowspan="2" class="col-achievement-sub">الخطط العلاجية</th><th colspan="4" class="col-achievement-sub">تنوع التقويم</th>
-                    </tr>
-                    <tr>
-                        <th class="col-elearning-subsub" style="color: #1e3a5f;">ملائم للخطة</th><th class="col-elearning-subsub" style="color: #1e3a5f;">مستوفي العناصر</th><th class="col-achievement-subsub">قصيرة</th><th class="col-achievement-subsub">ملف الإنجاز</th><th class="col-achievement-subsub">واجبات</th><th class="col-achievement-subsub">مشاريع</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body"></tbody>
-            </table>
-        </div>
-        <div class="footer">
-            <div class="signature-box">
-                <div class="signature-input"><input type="text" placeholder="الصفة"></div>
-                <div class="signature-input"><input type="text" placeholder="الاسم"></div>
-            </div>
-            <div class="signature-box">
-                <div class="signature-input"><input type="text" placeholder="الصفة"></div>
-                <div class="signature-input"><input type="text" placeholder="الاسم"></div>
-            </div>
-        </div>
-    </div>
-    <script>
-        let rowCounter = 0;
-
-        function selectGender(gender, event) {
-            document.querySelectorAll('.gender-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            const title = document.getElementById('main-title');
-            const columnHeader = document.getElementById('name-column-header');
-            const monthInput = document.getElementById('month-input');
-            if (gender === 'male') {
-                title.childNodes[0].nodeValue = 'سجل متابعة المعلم للعام الدراسي خلال شهر ';
-                columnHeader.textContent = 'اسم المعلم';
-            } else {
-                title.childNodes[0].nodeValue = 'سجل متابعة المعلمات للعام الدراسي خلال شهر ';
-                columnHeader.textContent = 'اسم المعلمة';
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        .printable-content {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+        }
+        .table-container {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        .table-container th, .table-container td {
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            text-align: center;
+        }
+        .table-container th {
+            background-color: #1f2937;
+            color: #ffffff;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .table-container tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        .table-container .sub-header {
+            font-size: 6px; /* تم تصغير حجم الخط إلى 6 بكسل كما هو مطلوب */
+            font-weight: normal;
+        }
+        /* تعديلات الطباعة */
+        @media print {
+            body {
+                background-color: #ffffff;
+                padding: 0;
+            }
+            .printable-content {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+            }
+            .no-print {
+                display: none !important;
             }
         }
+        .checkbox-cell {
+            position: relative;
+            padding: 0;
+            height: 40px;
+            width: 40px;
+        }
+        .checkbox-cell input[type="checkbox"] {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-        function extractNames() {
-            const lines = document.getElementById('names-textarea').value.split('\n').filter(line => line.trim() !== '');
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
-            rowCounter = 0;
+    <div class="printable-content container mx-auto">
+        
+        <!-- عنوان السجل -->
+        <div class="flex justify-between items-center mb-6 no-print">
+            <h1 class="text-2xl font-bold text-gray-800">سجل متابعة المعلم</h1>
+            <button onclick="window.print()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                طباعة
+            </button>
+        </div>
+
+        <!-- الجدول الرئيسي -->
+        <table class="table-container text-right">
+            <thead>
+                <tr class="bg-gray-800 text-white">
+                    <th rowspan="2">م</th>
+                    <th rowspan="2">اسم المعلم</th>
+                    <!-- الأعمدة الرئيسية -->
+                    <th colspan="4" class="bg-blue-600">التعلم التفكيري (فينيجوكا)</th>
+                    <th colspan="7" class="bg-indigo-600">محايج التعلم الوظيفي</th>
+                    <th colspan="5" class="bg-yellow-600">مهام التقييم النهائي</th>
+                    <th colspan="2" class="bg-red-600">متابعة التحصيل الدراسي</th>
+                    <th colspan="2" class="bg-purple-600">توزيع الطلاب</th>
+                    <th rowspan="2">توقيع المعلم/ة بالمطاوع</th>
+                </tr>
+                <!-- الصف الفرعي للعناوين الصغيرة -->
+                <tr class="bg-gray-700 text-white">
+                    <th class="sub-header">التدريس</th>
+                    <th class="sub-header">متابعة</th>
+                    <th class="sub-header">سير</th>
+                    <th class="sub-header">تقويم</th>
+                    <th class="sub-header">تحديد</th>
+                    <th class="sub-header">دعم</th>
+                    <th class="sub-header">محتوى</th>
+                    <th class="sub-header">مهام</th>
+                    <th class="sub-header">إدارة</th>
+                    <th class="sub-header">ورس</th>
+                    <th class="sub-header">تخصص</th>
+                    <th class="sub-header">مهام</th>
+                    <th class="sub-header">إدارية</th>
+                    <th class="sub-header">عمل</th>
+                    <th class="sub-header">تقييم</th>
+                    <th class="sub-header">أداء</th>
+                    <th class="sub-header">تكامل</th>
+                    <th class="sub-header">الطلاب</th>
+                    <th class="sub-header">أخرى</th>
+                </tr>
+            </thead>
+            <tbody id="teacher-data-body">
+                <!-- سيتم ملء البيانات هنا بواسطة JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // دالة لتحويل بيانات النص الخام إلى مصفوفة من الكائنات
+        function parseTeacherData(data) {
+            const lines = data.trim().split('\n');
+            const parsedData = [];
+
             lines.forEach(line => {
-                const name = line.replace(/^[0-9\s\-\.]*/, '').trim();
-                if (name) addTableRow(name);
-            });
-        }
-
-        function addTableRow(name) {
-            rowCounter++;
-            const row = document.getElementById('table-body').insertRow();
-            row.innerHTML = `<td>${rowCounter}</td><td><input type="text" value="${name}"></td>` + '<td class="check-cell" onclick="toggleCheck(this)"></td>'.repeat(2) + '<td><input type="number" min="0" value="0"></td>'.repeat(4) + '<td class="check-cell" onclick="toggleCheck(this)"></td>'.repeat(11) + '<td><input type="text"></td>';
-        }
-
-        function toggleCheck(cell) {
-            const current = cell.textContent.trim();
-            if (current === '') { cell.textContent = '✅'; }
-            else if (current === '✅') { cell.textContent = '❌'; }
-            else { cell.textContent = ''; }
-        }
-
-        function savePDF(event) {
-            const saveButton = event.target;
-            saveButton.textContent = 'جاري الحفظ...';
-            saveButton.disabled = true;
-
-            const { jsPDF } = window.jspdf;
-            const content = document.getElementById('record-page');
-            document.querySelectorAll('.no-print').forEach(el => el.style.visibility = 'hidden');
-
-            html2canvas(content, {
-                scale: 2,
-                useCORS: true,
-                width: content.scrollWidth,
-                height: content.scrollHeight
-            }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-                const pdfWidth = doc.internal.pageSize.getWidth();
-                const pdfHeight = doc.internal.pageSize.getHeight();
-                const imgProps = doc.getImageProperties(imgData);
-                const ratio = imgProps.width / imgProps.height;
-                let finalWidth = pdfWidth;
-                let finalHeight = finalWidth / ratio;
-                if (finalHeight > pdfHeight) {
-                    finalHeight = pdfHeight;
-                    finalWidth = finalHeight * ratio;
+                const parts = line.trim().split('\t');
+                if (parts.length >= 2) {
+                    const fullName = parts[1];
+                    // استخراج الاسم الأول والأخير فقط
+                    const nameParts = fullName.split(' ');
+                    let firstName = nameParts[0] || '';
+                    let lastName = nameParts[nameParts.length - 1] || '';
+                    
+                    // إذا كان الاسم الأول والأخير متطابقين، نستخدم الاسم الأول فقط
+                    const shortName = (firstName === lastName) ? firstName : `${firstName} ${lastName}`;
+                    
+                    parsedData.push({
+                        id: parts[0],
+                        name: shortName
+                    });
                 }
-                doc.addImage(imgData, 'PNG', (pdfWidth - finalWidth) / 2, (pdfHeight - finalHeight) / 2, finalWidth, finalHeight);
-                doc.save('سجل-المتابعة.pdf');
-            }).finally(() => {
-                document.querySelectorAll('.no-print').forEach(el => el.style.visibility = 'visible');
-                saveButton.textContent = 'حفظ PDF';
-                saveButton.disabled = false;
+            });
+            return parsedData;
+        }
+
+        // بيانات المعلمين الخام (من مثال المستخدم)
+        const rawData = `
+            1037167663	صالح عبدالرحيم عطيه الزهراني	966555779400	دائم	معلم	صفوف أولية	عربي
+            1048596781	أحمد المحمدي	966504221190	دائم	معلم	صفوف أولية	عربي
+            1059434872	أحمد سعدي	966555779401	دائم	معلم	صفوف أولية	عربي
+            1068894523	محمد أبو جبل	966555779402	دائم	معلم	صفوف أولية	عربي
+            1077556941	أحمد العجلي	966555779403	دائم	معلم	صفوف أولية	عربي
+            1088456254	أحمد أحمدي	966555779404	دائم	معلم	صفوف أولية	عربي
+            1099665842	أيمن القبيلي	966555779405	دائم	معلم	صفوف أولية	عربي
+            1101569974	فواز فواز الزهراني	966555779406	دائم	معلم	صفوف أولية	عربي
+            1123548976	نواف الزهراني	966555779407	دائم	معلم	صفوف أولية	عربي
+            1134567890	ياسر العتيبي	966555779408	دائم	معلم	صفوف أولية	عربي
+            1145678901	عمار محمدي	966555779409	دائم	معلم	صفوف أولية	عربي
+            1156789012	سالم سالم	966555779410	دائم	معلم	صفوف أولية	عربي
+            1167890123	حمد السفياني	966555779411	دائم	معلم	صفوف أولية	عربي
+            1178901234	فهد المالكي	966555779412	دائم	معلم	صفوف أولية	عربي
+        `;
+
+        // دالة لإنشاء الصفوف في الجدول
+        function renderTable(teachers) {
+            const tbody = document.getElementById('teacher-data-body');
+            if (!tbody) return;
+
+            // مسح المحتوى الحالي
+            tbody.innerHTML = '';
+
+            teachers.forEach((teacher, index) => {
+                const row = document.createElement('tr');
+                
+                // العمود التسلسلي
+                const numCell = document.createElement('td');
+                numCell.textContent = index + 1;
+                row.appendChild(numCell);
+                
+                // عمود اسم المعلم
+                const nameCell = document.createElement('td');
+                nameCell.textContent = teacher.name;
+                row.appendChild(nameCell);
+                
+                // الأعمدة التابعة
+                // عدد الأعمدة الثابتة للمتابعة (18 عمودًا)
+                const numCheckboxes = 18;
+                for (let i = 0; i < numCheckboxes; i++) {
+                    const checkboxCell = document.createElement('td');
+                    checkboxCell.className = 'checkbox-cell';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = `checkbox-${index}-${i}`;
+                    checkbox.name = `checkbox-${index}-${i}`;
+                    
+                    // إضافة مربع الاختيار إلى الخلية
+                    checkboxCell.appendChild(checkbox);
+                    row.appendChild(checkboxCell);
+                }
+
+                // عمود التوقيع
+                const signatureCell = document.createElement('td');
+                signatureCell.textContent = ''; // فارغ للتوقيع
+                row.appendChild(signatureCell);
+                
+                tbody.appendChild(row);
             });
         }
 
+        // تشغيل الدالة عند تحميل الصفحة
         window.onload = function() {
-            const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
-            document.getElementById('month-input').value = months[new Date().getMonth()];
+            const teachers = parseTeacherData(rawData);
+            renderTable(teachers);
         };
     </script>
 </body>
 </html>
+
