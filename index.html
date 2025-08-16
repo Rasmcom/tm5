@@ -6,12 +6,13 @@
     <title>سجل متابعة المعلمين</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* A4 landscape print styles */
+        /* أنماط الطباعة لورقة A4 أفقية */
         @page {
             size: A4 landscape;
             margin: 8mm;
         }
 
+        /* أنماط خاصة بالطباعة فقط */
         @media print {
             .no-print { display: none !important; }
             
@@ -20,10 +21,10 @@
                 height: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                background: #f0f0f0 !important; /* Light gray background */
+                background: #f0f0f0 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                overflow: hidden; /* Prevent scrollbars in print */
+                overflow: hidden;
             }
             
             .container {
@@ -38,7 +39,7 @@
                 transform-origin: top left !important;
             }
 
-            /* Header print styles */
+            /* تنسيق الرأس عند الطباعة */
             .header {
                 padding: 3mm !important;
                 width: 100% !important;
@@ -50,23 +51,46 @@
                 align-items: center !important;
                 flex-wrap: nowrap !important;
             }
+
+            /* ضبط ترتيب العناصر في الرأس ليكون الشعار يميناً ثم حقول الإدخال */
             .header-info-container {
                 flex-grow: 1 !important;
                 gap: 5mm !important;
+                order: 2 !important;
+                justify-content: flex-end !important;
             }
+            .logo { 
+                width: 15mm !important; 
+                height: auto !important;
+                order: 1 !important;
+            }
+            .input-section {
+                order: 2 !important;
+                min-width: 120px;
+            }
+            
+            /* دمج العنوان الرئيسي مع حقول الإدخال في الرأس للطباعة */
             .title-and-inputs {
                 flex-direction: row !important;
                 align-items: center !important;
-                justify-content: flex-end !important;
+                justify-content: flex-start !important;
                 width: auto !important;
+                order: 3 !important;
+                flex-grow: 2 !important;
             }
-            .main-title, .month-input {
+            .main-title {
                 font-size: 14px !important;
+                flex-grow: 1;
+                justify-content: flex-start;
             }
-            .logo { width: 15mm !important; height: auto !important; }
+            .month-input {
+                width: 60px !important;
+                min-width: 60px !important;
+                font-size: 12px !important;
+            }
             .input-section input { font-size: 8px !important; padding: 1mm !important; height: auto !important; }
             
-            /* Table print styles with clear borders */
+            /* أنماط الطباعة للجدول بحدود 0.5 بكسل */
             .main-table {
                 width: 100% !important;
                 margin: 0 !important;
@@ -80,12 +104,26 @@
             .main-table th, .main-table td {
                 padding: 2px !important;
                 font-size: 7px !important;
-                border: 1.5px solid #000 !important; /* Thicker border for print */
+                border: 0.5px solid #000 !important; /* حدود أنعم */
                 text-align: center !important;
                 vertical-align: middle !important;
             }
 
-            /* Footer print styles */
+            /* تصغير حجم خط العناوين الفرعية */
+            .main-table .col-elearning-sub,
+            .main-table .col-commitment-sub,
+            .main-table .col-growth-sub,
+            .main-table .col-achievement-sub {
+                font-size: 5px !important;
+            }
+
+            .main-table .col-elearning-subsub,
+            .main-table .col-achievement-subsub {
+                font-size: 5px !important;
+            }
+
+
+            /* تنسيق ذيل الصفحة عند الطباعة */
             .footer {
                 padding: 3mm !important;
                 justify-content: space-between !important;
@@ -101,7 +139,7 @@
                 padding: 1mm !important;
             }
 
-            /* Specific Column Widths */
+            /* تحديد عرض الأعمدة لضمان احتواء المحتوى */
             .main-table colgroup col:nth-child(1) { width: 2.5% !important; } /* م */
             .main-table colgroup col:nth-child(2) { width: 7% !important; } /* الاسم */
             .main-table colgroup col:nth-child(3), .main-table colgroup col:nth-child(4) { width: 5% !important; } /* تحضير الدروس */
@@ -116,6 +154,7 @@
             .main-table colgroup col:nth-child(26) { width: 8% !important; } /* التوقيع */
         }
         
+        /* الأنماط العامة لصفحة الويب */
         * {
             margin: 0;
             padding: 0;
@@ -138,7 +177,7 @@
             overflow: hidden;
         }
 
-        /* NEW HEADER STRUCTURE */
+        /* هيكل جديد للرأس */
         .header {
             background: linear-gradient(135deg, #2c5aa0 0%, #1e3a5f 100%);
             padding: 15px 30px;
@@ -344,11 +383,11 @@
             font-size: 13px;
             font-family: 'Cairo', sans-serif;
             background: white;
-            border: 1.5px solid black; /* Table border */
+            border: 0.5px solid black; /* حدود الجدول 0.5 بكسل */
         }
         
         .main-table th, .main-table td {
-            border: 1.5px solid #000; /* Thicker borders for all cells */
+            border: 0.5px solid #000; /* حدود الخلايا 0.5 بكسل */
             padding: 10px;
             text-align: center;
             vertical-align: middle;
@@ -399,7 +438,7 @@
         
         .check-cell:hover { background: #f8f9fa; }
         
-        /* New Footer Structure */
+        /* هيكل جديد للذيل */
         .footer {
             padding: 30px;
             background: #f8f9fa;
@@ -470,14 +509,14 @@
                     سجل متابعة المعلم للعام الدراسي خلال شهر 
                     <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">
                 </div>
-                <div class="gender-selection no-print">
-                    <button class="gender-btn active" onclick="selectGender('male')">معلم</button>
-                    <button class="gender-btn" onclick="selectGender('female')">معلمة</button>
-                </div>
             </div>
         </div>
         
         <!-- Controls -->
+        <div class="gender-selection no-print">
+            <button class="gender-btn active" onclick="selectGender('male')">معلم</button>
+            <button class="gender-btn" onclick="selectGender('female')">معلمة</button>
+        </div>
         <div class="controls no-print">
             <div class="names-input">
                 <label>الصق بيانات المعلمين/المعلمات هنا:</label>
@@ -569,20 +608,10 @@
         <!-- Footer -->
         <div class="footer">
             <div class="signature-box">
-                <div class="signature-input">
-                    <input type="text" placeholder="أدخل الصفة">
-                </div>
-                <div class="signature-input">
-                    <input type="text" placeholder="أدخل الاسم">
-                </div>
+                <input type="text" placeholder="أدخل الصفة والاسم">
             </div>
             <div class="signature-box">
-                <div class="signature-input">
-                    <input type="text" placeholder="أدخل الصفة">
-                </div>
-                <div class="signature-input">
-                    <input type="text" placeholder="أدخل الاسم">
-                </div>
+                <input type="text" placeholder="أدخل الصفة والاسم">
             </div>
         </div>
     </div>
@@ -594,13 +623,13 @@
         function selectGender(gender) {
             currentGender = gender;
             
-            // Update button states
+            // تحديث حالة الأزرار
             document.querySelectorAll('.gender-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            // Update title and column header
+            // تحديث العنوان ورأس العمود
             const title = document.getElementById('main-title');
             const columnHeader = document.getElementById('name-column-header');
             const monthInput = document.getElementById('month-input');
@@ -670,7 +699,7 @@
                 return;
             }
             
-            // Clear existing rows
+            // مسح الصفوف الموجودة
             document.getElementById('table-body').innerHTML = '';
             rowCounter = 0;
             
@@ -721,7 +750,7 @@
                 <td class="check-cell" onclick="toggleCheck(this)"></td>
                 <td class="check-cell" onclick="toggleCheck(this)"></td>
                 <td class="check-cell" onclick="toggleCheck(this)"></td>
-                <td><input type="text"></td>
+                <td><input type="text" placeholder="أدخل التوقيع"></td>
             `;
             
             tbody.appendChild(row);
@@ -741,8 +770,8 @@
                 cell.style.backgroundColor = '';
             }
         }
-
-        // Initialize with current month
+        
+        // عند تحميل الصفحة، يتم تعيين الشهر الحالي
         window.onload = function() {
             const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
                           'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
