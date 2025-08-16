@@ -20,7 +20,7 @@
                 height: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                background: white !important;
+                background: #f0f0f0 !important; /* Light gray background */
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 overflow: hidden; /* Prevent scrollbars in print */
@@ -37,26 +37,36 @@
                 transform: scale(1) !important;
                 transform-origin: top left !important;
             }
-            
-            .header, .title-section, .footer {
+
+            /* Header print styles */
+            .header {
                 padding: 3mm !important;
                 width: 100% !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                gap: 5mm !important; /* Smaller gap for print */
-                flex-direction: row !important; /* Ensure row direction */
+                gap: 5mm !important;
+                flex-direction: row !important;
                 justify-content: space-between !important;
                 align-items: center !important;
+                flex-wrap: nowrap !important;
             }
-            
-            .input-section { flex-direction: column !important; }
-            .input-section input {
-                font-size: 8px !important;
-                padding: 1mm !important;
-                height: auto !important;
-                width: 100% !important;
+            .header-info-container {
+                flex-grow: 1 !important;
+                gap: 5mm !important;
             }
+            .title-and-inputs {
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+                width: auto !important;
+            }
+            .main-title, .month-input {
+                font-size: 14px !important;
+            }
+            .logo { width: 15mm !important; height: auto !important; }
+            .input-section input { font-size: 8px !important; padding: 1mm !important; height: auto !important; }
             
+            /* Table print styles with clear borders */
             .main-table {
                 width: 100% !important;
                 margin: 0 !important;
@@ -68,34 +78,30 @@
             }
             
             .main-table th, .main-table td {
-                padding: 2px !important; /* Smaller padding */
+                padding: 2px !important;
                 font-size: 7px !important;
-                border: 0.5px solid #000 !important;
+                border: 1.5px solid #000 !important; /* Thicker border for print */
                 text-align: center !important;
                 vertical-align: middle !important;
             }
 
-            /* Main Headers */
-            .main-table th[rowspan="3"] { font-size: 6px !important; }
-            /* Sub Headers */
-            .main-table th[rowspan="2"] { font-size: 6px !important; }
-            /* Sub-sub Headers (as requested) */
-            .main-table th[class$="-subsub"] { font-size: 6px !important; }
-            
-            .main-table input {
-                font-size: 7px !important;
-                padding: 1px !important;
-                border: none !important;
-                background: transparent !important;
-                width: 100% !important;
-                text-align: center !important;
+            /* Footer print styles */
+            .footer {
+                padding: 3mm !important;
+                justify-content: space-between !important;
+                flex-direction: row !important;
+                gap: 10mm !important;
             }
-            
-            .main-title { font-size: 12px !important; }
-            .month-input { font-size: 12px !important; }
-            .logo { width: 15mm !important; height: auto !important; }
+            .signature-box {
+                min-width: 120px !important;
+                width: 45% !important;
+            }
+            .signature-box input {
+                font-size: 7px !important;
+                padding: 1mm !important;
+            }
 
-            /* Column Widths (Adjusted) */
+            /* Specific Column Widths */
             .main-table colgroup col:nth-child(1) { width: 2.5% !important; } /* م */
             .main-table colgroup col:nth-child(2) { width: 7% !important; } /* الاسم */
             .main-table colgroup col:nth-child(3), .main-table colgroup col:nth-child(4) { width: 5% !important; } /* تحضير الدروس */
@@ -108,12 +114,6 @@
             .main-table colgroup col:nth-child(19), .main-table colgroup col:nth-child(20), .main-table colgroup col:nth-child(21) { width: 4% !important; } /* التحصيل */
             .main-table colgroup col:nth-child(22), .main-table colgroup col:nth-child(23), .main-table colgroup col:nth-child(24), .main-table colgroup col:nth-child(25) { width: 4% !important; } /* التقويم */
             .main-table colgroup col:nth-child(26) { width: 8% !important; } /* التوقيع */
-
-            .signature-box { min-width: 120px !important; }
-            .signature-box input {
-                font-size: 7px !important;
-                padding: 1mm !important;
-            }
         }
         
         * {
@@ -137,64 +137,93 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             overflow: hidden;
         }
-        
+
+        /* NEW HEADER STRUCTURE */
         .header {
             background: linear-gradient(135deg, #2c5aa0 0%, #1e3a5f 100%);
-            padding: 15px 30px; /* Reduced header padding */
+            padding: 15px 30px;
             color: white;
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Space between logo and inputs */
+            justify-content: space-between;
             flex-wrap: nowrap;
-            gap: 20px;
-            position: relative;
         }
         
+        .header-info-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+        }
+
         .input-section {
             display: flex;
             flex-direction: column;
-            gap: 5px; /* Smaller gap */
-            min-width: 200px; /* Adjusted min-width */
+            gap: 5px;
         }
         
         .input-section input {
-            padding: 6px 10px; /* Smaller input padding */
+            padding: 6px 10px;
             border: none;
             border-radius: 6px;
-            font-size: 12px; /* Smaller font size */
+            font-size: 12px;
             font-family: 'Cairo', sans-serif;
             font-weight: 700;
             background: rgba(255,255,255,0.95);
             color: #333;
             transition: all 0.3s ease;
-            height: 30px; /* Reduced height */
+            height: 30px;
         }
         
         .input-section input:focus {
             outline: none;
             box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
         }
-        
-        .logo-section {
+
+        .title-and-inputs {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .main-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
             align-items: center;
+            gap: 5px;
         }
-        
-        .logo {
-            width: 80px; /* Reduced logo size */
-            height: auto;
-        }
-        
-        .title-section {
-            padding: 30px;
+
+        .month-input {
+            display: inline-block;
+            border: none;
+            border-bottom: 2px solid white;
+            background: transparent;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
             text-align: center;
+            min-width: 100px;
+            padding: 4px;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .month-input:focus {
+            outline: none;
+            border-bottom-color: #f8f9fa;
+        }
+
+        .gender-selection {
+            padding: 20px 30px;
             background: #f8f9fa;
             border-bottom: 3px solid #2c5aa0;
-        }
-        
-        .gender-selection {
-            margin-bottom: 25px;
             display: flex;
             justify-content: center;
             gap: 20px;
@@ -205,14 +234,14 @@
         }
         
         .gender-btn {
-            padding: 15px 30px;
+            padding: 10px 20px;
             border: 2px solid #2c5aa0;
             background: white;
             color: #2c5aa0;
             border-radius: 25px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
             font-family: 'Cairo', sans-serif;
             transition: all 0.3s ease;
         }
@@ -222,33 +251,6 @@
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(44, 90, 160, 0.3);
-        }
-        
-        .main-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 10px;
-            font-family: 'Cairo', sans-serif;
-        }
-        
-        .month-input {
-            display: inline-block;
-            border: none;
-            border-bottom: 3px solid #2c5aa0;
-            background: transparent;
-            font-size: 28px;
-            font-weight: 700;
-            color: #2c5aa0;
-            text-align: center;
-            min-width: 150px;
-            padding: 8px;
-            font-family: 'Cairo', sans-serif;
-        }
-        
-        .month-input:focus {
-            outline: none;
-            border-bottom-color: #1e3a5f;
         }
         
         .controls {
@@ -336,25 +338,17 @@
             overflow-x: auto;
         }
         
-        @media print {
-            .table-container {
-                padding: 0 !important;
-                margin: 0 !important;
-                width: 100% !important;
-                overflow: visible !important;
-            }
-        }
-        
         .main-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
             font-family: 'Cairo', sans-serif;
             background: white;
+            border: 1.5px solid black; /* Table border */
         }
         
         .main-table th, .main-table td {
-            border: 1px solid #ddd;
+            border: 1.5px solid #000; /* Thicker borders for all cells */
             padding: 10px;
             text-align: center;
             vertical-align: middle;
@@ -382,12 +376,9 @@
         .col-achievement-subsub { background: #ffb3ba; }
         .col-signature { background: #6f42c1; }
         
-        .main-table td {
-            background: white;
-        }
+        .main-table td { background: white; }
         
-        .main-table input[type="number"] {
-            width: 70px;
+        .main-table input[type="number"], .main-table input[type="text"] {
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -395,15 +386,8 @@
             font-family: 'Cairo', sans-serif;
             font-size: 14px;
         }
-        
-        .main-table input[type="text"] {
-            width: 140px;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 14px;
-        }
+        .main-table input[type="number"] { width: 70px; }
+        .main-table input[type="text"] { width: 140px; }
         
         .check-cell {
             cursor: pointer;
@@ -413,15 +397,14 @@
             min-width: 50px;
         }
         
-        .check-cell:hover {
-            background: #f8f9fa;
-        }
+        .check-cell:hover { background: #f8f9fa; }
         
+        /* New Footer Structure */
         .footer {
             padding: 30px;
             background: #f8f9fa;
             display: flex;
-            justify-content: space-between; /* Space between signature boxes */
+            justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 30px;
@@ -430,13 +413,9 @@
         .signature-box {
             display: flex;
             flex-direction: column;
-            gap: 10px; /* Reduced gap */
+            gap: 10px;
             min-width: 250px;
             align-items: center;
-        }
-        
-        .signature-input label {
-            display: none;
         }
         
         .signature-input {
@@ -448,11 +427,11 @@
         
         .signature-input input {
             flex: 1;
-            padding: 10px; /* Reduced padding */
+            padding: 10px;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-family: 'Cairo', sans-serif;
-            font-size: 14px; /* Reduced font size */
+            font-size: 14px;
             font-weight: 700;
             transition: border-color 0.3s ease;
         }
@@ -463,43 +442,14 @@
         }
         
         @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .input-section {
-                max-width: 100%;
-            }
-            
-            .controls {
-                flex-direction: column;
-            }
-            
-            .names-input {
-                min-width: 100%;
-            }
-            
-            .footer {
-                flex-direction: column;
-            }
-            
-            .main-table {
-                font-size: 11px;
-            }
-            
-            .main-table th,
-            .main-table td {
-                padding: 8px;
-            }
-            
-            .main-title {
-                font-size: 24px;
-            }
-            
-            .month-input {
-                font-size: 20px;
-            }
+            .header { flex-direction: column; text-align: center; }
+            .header-info-container, .title-and-inputs { flex-direction: column; }
+            .controls, .footer { flex-direction: column; }
+            .names-input { min-width: 100%; }
+            .main-table { font-size: 11px; }
+            .main-table th, .main-table td { padding: 8px; }
+            .main-title { font-size: 24px; }
+            .month-input { font-size: 20px; }
         }
     </style>
 </head>
@@ -507,26 +457,23 @@
     <div class="container" id="record-page">
         <!-- Header -->
         <div class="header">
-            <div class="logo-section">
+            <div class="header-info-container">
                 <img src="https://salogos.org/wp-content/uploads/2021/11/UntiTtled-1-1300x988.png" alt="شعار وزارة التعليم" class="logo">
+                <div class="input-section">
+                    <input type="text" id="education-dept" placeholder="أدخل الإدارة التعليمية">
+                    <input type="text" id="education-region" placeholder="أدخل المنطقة التعليمية">
+                    <input type="text" id="school-name" placeholder="أدخل اسم المدرسة">
+                </div>
             </div>
-            <div class="input-section">
-                <input type="text" id="education-dept" placeholder="أدخل الإدارة التعليمية">
-                <input type="text" id="education-region" placeholder="أدخل المنطقة التعليمية">
-                <input type="text" id="school-name" placeholder="أدخل المدرسة">
-            </div>
-        </div>
-        
-        <!-- Title Section -->
-        <div class="title-section">
-            <div class="gender-selection">
-                <button class="gender-btn active" onclick="selectGender('male')">معلم</button>
-                <button class="gender-btn" onclick="selectGender('female')">معلمة</button>
-            </div>
-            
-            <div class="main-title" id="main-title">
-                سجل متابعة المعلم للعام الدراسي خلال شهر 
-                <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">
+            <div class="title-and-inputs">
+                <div class="main-title" id="main-title">
+                    سجل متابعة المعلم للعام الدراسي خلال شهر 
+                    <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">
+                </div>
+                <div class="gender-selection no-print">
+                    <button class="gender-btn active" onclick="selectGender('male')">معلم</button>
+                    <button class="gender-btn" onclick="selectGender('female')">معلمة</button>
+                </div>
             </div>
         </div>
         
@@ -623,18 +570,18 @@
         <div class="footer">
             <div class="signature-box">
                 <div class="signature-input">
-                    <input type="text" id="left-title" placeholder="أدخل الصفة">
+                    <input type="text" placeholder="أدخل الصفة">
                 </div>
                 <div class="signature-input">
-                    <input type="text" id="left-name" placeholder="أدخل الاسم">
+                    <input type="text" placeholder="أدخل الاسم">
                 </div>
             </div>
             <div class="signature-box">
                 <div class="signature-input">
-                    <input type="text" id="right-title" placeholder="أدخل الصفة">
+                    <input type="text" placeholder="أدخل الصفة">
                 </div>
                 <div class="signature-input">
-                    <input type="text" id="right-name" placeholder="أدخل الاسم">
+                    <input type="text" placeholder="أدخل الاسم">
                 </div>
             </div>
         </div>
@@ -656,28 +603,21 @@
             // Update title and column header
             const title = document.getElementById('main-title');
             const columnHeader = document.getElementById('name-column-header');
-            
+            const monthInput = document.getElementById('month-input');
+            const monthValue = monthInput.value;
+
             if (gender === 'male') {
-                title.innerHTML = 'سجل متابعة المعلم للعام الدراسي خلال شهر <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">';
+                title.innerHTML = `
+                    سجل متابعة المعلم للعام الدراسي خلال شهر 
+                    <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="${monthValue}">
+                `;
                 columnHeader.textContent = 'اسم المعلم';
             } else {
-                title.innerHTML = 'سجل متابعة المعلمات للعام الدراسي خلال شهر <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">';
+                title.innerHTML = `
+                    سجل متابعة المعلمات للعام الدراسي خلال شهر 
+                    <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="${monthValue}">
+                `;
                 columnHeader.textContent = 'اسم المعلمة';
-            }
-        }
-
-        function extractFirstAndLast(fullName) {
-            // إزالة المسافات الزائدة
-            fullName = fullName.trim();
-            
-            // تقسيم النص باستخدام المسافة
-            let parts = fullName.split(/\s+/);
-
-            // الاحتفاظ فقط بأول وآخر كلمة
-            if (parts.length >= 2) {
-                return parts[0] + " " + parts[parts.length - 1];
-            } else {
-                return fullName; // إذا الاسم كلمة واحدة
             }
         }
 
