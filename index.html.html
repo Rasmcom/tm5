@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سجل متابعة المعلمين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 0.5in;
+        }
+        
+        @media print {
+            .no-print { display: none !important; }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            html, body {
+                width: 100% !important;
+                height: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                font-size: 12px !important;
+            }
+            
+            .container {
+                width: 100% !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                background: white !important;
+                page-break-inside: avoid !important;
+            }
+            
+            .header {
+                padding: 10px !important;
+                background: #2c5aa0 !important;
+                color: white !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+            
+            .title-section {
+                padding: 15px !important;
+                text-align: center !important;
+                background: #f8f9fa !important;
+            }
+            
+            .main-title {
+                font-size: 18px !important;
+                font-weight: bold !important;
+                color: #333 !important;
+            }
+            
+            .month-input {
+                font-size: 18px !important;
+                font-weight: bold !important;
+                color: #2c5aa0 !important;
+                border: none !important;
+                border-bottom: 2px solid #2c5aa0 !important;
+                background: transparent !important;
+            }
+            
+            .logo {
+                width: 60px !important;
+                height: auto !important;
+            }
+            
+            .input-section input {
+                font-size: 10px !important;
+                padding: 5px !important;
+                background: rgba(255,255,255,0.9) !important;
+                border: 1px solid #ddd !important;
+                border-radius: 3px !important;
+            }
+            
+            .table-container {
+                padding: 10px !important;
+                width: 100% !important;
+            }
+            
+            .main-table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                font-size: 8px !important;
+                margin: 0 !important;
+            }
+            
+            .main-table th,
+            .main-table td {
+                border: 1px solid #000 !important;
+                padding: 3px !important;
+                text-align: center !important;
+                vertical-align: middle !important;
+                font-size: 7px !important;
+            }
+            
+            .main-table th {
+                font-weight: bold !important;
+                color: white !important;
+            }
+            
+            .main-table input {
+                border: none !important;
+                background: transparent !important;
+                width: 100% !important;
+                text-align: center !important;
+                font-size: 7px !important;
+                padding: 1px !important;
+            }
+            
+            .footer {
+                padding: 10px !important;
+                background: #f8f9fa !important;
+                display: flex !important;
+                justify-content: center !important;
+                gap: 50px !important;
+            }
+            
+            .signature-box input {
+                font-size: 10px !important;
+                padding: 5px !important;
+                border: 1px solid #ddd !important;
+                border-radius: 3px !important;
+                width: 200px !important;
+            }
+            
+            /* Column Colors */
+            .col-number { background: #6c757d !important; }
+            .col-name { background: #495057 !important; }
+            .col-elearning { background: #007bff !important; }
+            .col-elearning-sub { background: #66b3ff !important; }
+            .col-elearning-subsub { background: #b3d9ff !important; }
+            .col-commitment { background: #28a745 !important; }
+            .col-commitment-sub { background: #66d966 !important; }
+            .col-growth { background: #ffc107 !important; color: #333 !important; }
+            .col-growth-sub { background: #ffdb66 !important; color: #333 !important; }
+            .col-achievement { background: #dc3545 !important; }
+            .col-achievement-sub { background: #ff6b7a !important; }
+            .col-achievement-subsub { background: #ffb3ba !important; }
+            .col-signature { background: #6f42c1 !important; }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c5aa0 0%, #1e3a5f 100%);
+            padding: 30px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+            gap: 30px;
+            position: relative;
+        }
+        
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 250px;
+        }
+        
+        .input-section input {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            transition: all 0.3s ease;
+            height: 35px;
+        }
+        
+        .input-section input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+        }
+        
+        .logo-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 100px;
+            height: auto;
+        }
+        
+        .title-section {
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+            border-bottom: 3px solid #2c5aa0;
+        }
+        
+        .gender-selection {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        @media print {
+            .gender-selection { display: none !important; }
+        }
+        
+        .gender-btn {
+            padding: 15px 30px;
+            border: 2px solid #2c5aa0;
+            background: white;
+            color: #2c5aa0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .gender-btn.active {
+            background: #2c5aa0;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 90, 160, 0.3);
+        }
+        
+        .main-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .month-input {
+            display: inline-block;
+            border: none;
+            border-bottom: 3px solid #2c5aa0;
+            background: transparent;
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c5aa0;
+            text-align: center;
+            min-width: 150px;
+            padding: 8px;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .month-input:focus {
+            outline: none;
+            border-bottom-color: #1e3a5f;
+        }
+        
+        .controls {
+            padding: 25px 30px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .names-input {
+            flex: 1;
+            min-width: 350px;
+        }
+        
+        .names-input label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .names-input textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Cairo', sans-serif;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .names-input textarea:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3a5f;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 90, 160, 0.3);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .btn-warning:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .table-container {
+            padding: 30px;
+            overflow-x: auto;
+        }
+        
+        @media print {
+            .table-container {
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                overflow: visible !important;
+            }
+        }
+        
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            font-family: 'Cairo', sans-serif;
+            background: white;
+        }
+        
+        .main-table th,
+        .main-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .main-table th {
+            font-weight: 600;
+            color: white;
+            font-size: 12px;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        /* Column Colors */
+        .col-number { background: #6c757d; }
+        .col-name { background: #495057; }
+        .col-elearning { background: #007bff; }
+        .col-elearning-sub { background: #66b3ff; }
+        .col-elearning-subsub { background: #b3d9ff; }
+        .col-commitment { background: #28a745; }
+        .col-commitment-sub { background: #66d966; }
+        .col-growth { background: #ffc107; color: #333; }
+        .col-growth-sub { background: #ffdb66; color: #333; }
+        .col-achievement { background: #dc3545; }
+        .col-achievement-sub { background: #ff6b7a; }
+        .col-achievement-subsub { background: #ffb3ba; }
+        .col-signature { background: #6f42c1; }
+        
+        .main-table td {
+            background: white;
+        }
+        
+        .main-table input[type="number"] {
+            width: 70px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+        }
+        
+        .main-table input[type="text"] {
+            width: 140px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+        }
+        
+        .check-cell {
+            cursor: pointer;
+            font-size: 18px;
+            padding: 12px;
+            transition: all 0.2s ease;
+            min-width: 50px;
+        }
+        
+        .check-cell:hover {
+            background: #f8f9fa;
+        }
+        
+        .footer {
+            padding: 30px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .signature-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 300px;
+            align-items: center;
+        }
+        
+        .signature-input label {
+            display: none;
+        }
+        
+        .signature-input {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .signature-input input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            transition: border-color 0.3s ease;
+        }
+        
+        .signature-input input:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+
+        /* PDF specific styles */
+        .pdf-page {
+            width: 297mm;
+            min-height: 210mm;
+            background: white;
+            margin: 0;
+            padding: 10mm;
+            box-sizing: border-box;
+            page-break-after: always;
+            display: none;
+        }
+
+        .pdf-page:last-child {
+            page-break-after: avoid;
+        }
+
+        .pdf-page.active {
+            display: block;
+        }
+
+        .pdf-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2c5aa0;
+            color: white;
+            padding: 8mm;
+            margin-bottom: 5mm;
+        }
+
+        .pdf-title {
+            text-align: center;
+            background: #f8f9fa;
+            padding: 8mm;
+            margin-bottom: 5mm;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8px;
+            margin-bottom: 5mm;
+        }
+
+        .pdf-table th,
+        .pdf-table td {
+            border: 1px solid #000;
+            padding: 2px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .pdf-table th {
+            font-weight: bold;
+            color: white;
+        }
+
+        .pdf-footer {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            background: #f8f9fa;
+            padding: 8mm;
+            margin-top: 5mm;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .input-section {
+                max-width: 100%;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .names-input {
+                min-width: 100%;
+            }
+            
+            .footer {
+                flex-direction: column;
+            }
+            
+            .main-table {
+                font-size: 11px;
+            }
+            
+            .main-table th,
+            .main-table td {
+                padding: 8px;
+            }
+            
+            .main-title {
+                font-size: 24px;
+            }
+            
+            .month-input {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="record-page">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <img src="https://salogos.org/wp-content/uploads/2021/11/UntiTtled-1-1300x988.png" alt="شعار وزارة التعليم" class="logo">
+            </div>
+            
+            <div class="input-section">
+                <input type="text" id="education-dept" placeholder="أدخل الإدارة التعليمية">
+                <input type="text" id="education-region" placeholder="أدخل المنطقة التعليمية">
+                <input type="text" id="school-name" placeholder="أدخل المدرسة">
+            </div>
+        </div>
+        
+        <!-- Title Section -->
+        <div class="title-section">
+            <div class="gender-selection">
+                <button class="gender-btn active" onclick="selectGender('male')">معلم</button>
+                <button class="gender-btn" onclick="selectGender('female')">معلمة</button>
+            </div>
+            
+            <div class="main-title" id="main-title">
+                سجل متابعة المعلم للعام الدراسي خلال شهر 
+                <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">
+            </div>
+        </div>
+        
+        <!-- Controls -->
+        <div class="controls no-print">
+            <div class="names-input">
+                <label>الصق بيانات المعلمين/المعلمات هنا:</label>
+                <textarea id="names-textarea" placeholder="الصق البيانات هنا...&#10;مثال:&#10;1- أحمد محمد العلي - معلم رياضيات - رقم الهوية: 1234567890&#10;2- فاطمة سعد الأحمد - معلمة لغة عربية - المؤهل: بكالوريوس"></textarea>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="extractNames()">استخراج الأسماء</button>
+                <button class="btn btn-success" onclick="window.print()">🖨️ طباعة مباشرة</button>
+                <button class="btn btn-warning" onclick="generatePDF()">📄 تحويل إلى PDF</button>
+            </div>
+        </div>
+        
+        <!-- Table -->
+        <div class="table-container">
+            <table class="main-table" id="main-table">
+                <thead>
+                    <tr>
+                        <th rowspan="3" class="col-number">م</th>
+                        <th rowspan="3" class="col-name" id="name-column-header">اسم المعلم</th>
+                        <th colspan="6" class="col-elearning">التعليم الإلكتروني (مدرستي)</th>
+                        <th colspan="5" class="col-commitment">معايير الالتزام الوظيفي</th>
+                        <th colspan="5" class="col-growth">معايير النمو المهني</th>
+                        <th colspan="7" class="col-achievement">متابعة التحصيل الدراسي</th>
+                        <th rowspan="3" class="col-signature">توقيع المعلم/ـة بالاطلاع</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="col-elearning-sub">تحضير الدروس</th>
+                        <th rowspan="2" class="col-elearning-sub">عدد الأنشطة</th>
+                        <th rowspan="2" class="col-elearning-sub">عدد الاختبارات</th>
+                        <th rowspan="2" class="col-elearning-sub">عدد الدروس المعدة</th>
+                        <th rowspan="2" class="col-elearning-sub">عدد الدروس غير المعدة</th>
+                        <th rowspan="2" class="col-commitment-sub">المحافظة على أوقات الدوام</th>
+                        <th rowspan="2" class="col-commitment-sub">الالتزام بزمن الحصص</th>
+                        <th rowspan="2" class="col-commitment-sub">المشاركة في الأنشطة والإذاعة</th>
+                        <th rowspan="2" class="col-commitment-sub">المحافظة على البيئة</th>
+                        <th rowspan="2" class="col-commitment-sub">التعاون وروح الفريق</th>
+                        <th rowspan="2" class="col-growth-sub">مجتمع مهني</th>
+                        <th rowspan="2" class="col-growth-sub">زيارة تبادلية</th>
+                        <th rowspan="2" class="col-growth-sub">ورشة عمل</th>
+                        <th rowspan="2" class="col-growth-sub">درس تطبيقي</th>
+                        <th rowspan="2" class="col-growth-sub">استراتيجيات</th>
+                        <th rowspan="2" class="col-achievement-sub">الاختبارات التشخيصية</th>
+                        <th rowspan="2" class="col-achievement-sub">تحليل النتائج</th>
+                        <th rowspan="2" class="col-achievement-sub">الخطط العلاجية</th>
+                        <th colspan="4" class="col-achievement-sub">تنوع أساليب التقويم</th>
+                    </tr>
+                    <tr>
+                        <th class="col-elearning-subsub" style="color: #1e3a5f;">ملائم للخطة</th>
+                        <th class="col-elearning-subsub" style="color: #1e3a5f;">مستوفي العناصر</th>
+                        <th class="col-achievement-subsub">اختبارات قصيرة</th>
+                        <th class="col-achievement-subsub">ملف الإنجاز</th>
+                        <th class="col-achievement-subsub">واجبات إضافية</th>
+                        <th class="col-achievement-subsub">مشاريع</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Rows will be added dynamically -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="signature-box">
+                <div class="signature-input">
+                    <input type="text" id="signature-title" placeholder="أدخل الصفة">
+                </div>
+            </div>
+            <div class="signature-box">
+                <div class="signature-input">
+                    <input type="text" id="signature-name" placeholder="أدخل الاسم">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Pages Container (Hidden) -->
+    <div id="pdf-pages-container" style="display: none;">
+        <!-- PDF pages will be generated here -->
+    </div>
+
+    <script>
+        let currentGender = 'male';
+        let rowCounter = 0;
+        let allNames = [];
+
+        function selectGender(gender) {
+            currentGender = gender;
+            
+            // Update button states
+            document.querySelectorAll('.gender-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update title and column header
+            const title = document.getElementById('main-title');
+            const columnHeader = document.getElementById('name-column-header');
+            
+            if (gender === 'male') {
+                title.innerHTML = 'سجل متابعة المعلم للعام الدراسي خلال شهر <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">';
+                columnHeader.textContent = 'اسم المعلم';
+            } else {
+                title.innerHTML = 'سجل متابعة المعلمات للعام الدراسي خلال شهر <input type="text" class="month-input" id="month-input" placeholder="الشهر" value="">';
+                columnHeader.textContent = 'اسم المعلمة';
+            }
+        }
+
+        function extractFirstAndLast(fullName) {
+            // إزالة المسافات الزائدة
+            fullName = fullName.trim();
+            
+            // تقسيم النص باستخدام المسافة
+            let parts = fullName.split(/\s+/);
+
+            // الاحتفاظ فقط بأول وآخر كلمة
+            if (parts.length >= 2) {
+                return parts[0] + " " + parts[parts.length - 1];
+            } else {
+                return fullName; // إذا الاسم كلمة واحدة
+            }
+        }
+
+        function cleanAndExtractName(text) {
+            // إزالة الأرقام والرموز
+            let cleaned = text.replace(/[0-9\-\:\.\،\,\(\)\[\]\/\\]/g, ' ');
+            
+            // قائمة الكلمات المراد حذفها
+            const wordsToRemove = [
+                'معلم', 'معلمة', 'أستاذ', 'أستاذة', 'دكتور', 'دكتورة', 'مدرس', 'مدرسة',
+                'رياضيات', 'فيزياء', 'كيمياء', 'أحياء', 'عربية', 'انجليزية', 'فرنسية',
+                'تاريخ', 'جغرافيا', 'اجتماعيات', 'تربية', 'إسلامية', 'قرآن', 'حديث',
+                'فقه', 'توحيد', 'حاسوب', 'حاسب', 'آلي', 'تقنية', 'معلومات', 'رقم',
+                'الهوية', 'المؤهل', 'بكالوريوس', 'ماجستير', 'دكتوراه', 'دبلوم',
+                'تخصص', 'قسم', 'كلية', 'جامعة', 'معهد', 'مدرسة', 'ثانوية', 'متوسطة',
+                'ابتدائية', 'روضة', 'أطفال', 'صف', 'فصل', 'مرحلة', 'سنة', 'عام',
+                'الأول', 'الثاني', 'الثالث', 'الرابع', 'الخامس', 'السادس'
+            ];
+            
+            // حذف الكلمات غير المرغوب فيها
+            wordsToRemove.forEach(word => {
+                const regex = new RegExp(word, 'g');
+                cleaned = cleaned.replace(regex, ' ');
+            });
+            
+            // استخراج الكلمات العربية فقط
+            let words = cleaned.split(/\s+/).filter(word => {
+                word = word.trim();
+                if (word.length === 0) return false;
+                return /^[\u0600-\u06FF]+$/.test(word) && word.length >= 2;
+            });
+            
+            if (words.length >= 4) {
+                // الاسم الأول + مسافة + الاسم الرابع (حذف الثاني والثالث)
+                return words[0] + " " + words[3];
+            } else if (words.length >= 2) {
+                // الاسم الأول + الأخير
+                return words[0] + " " + words[words.length - 1];
+            } else if (words.length === 1) {
+                return words[0];
+            }
+            
+            return '';
+        }
+
+        function extractNames() {
+            const textarea = document.getElementById('names-textarea');
+            const lines = textarea.value.split('\n').filter(line => line.trim() !== '');
+            
+            if (lines.length === 0) {
+                alert('يرجى إدخال أسماء المعلمين أولاً');
+                return;
+            }
+            
+            // Clear existing rows and reset
+            document.getElementById('table-body').innerHTML = '';
+            rowCounter = 0;
+            allNames = [];
+            
+            lines.forEach(line => {
+                const extractedName = cleanAndExtractName(line);
+                if (extractedName) {
+                    allNames.push(extractedName);
+                    addTableRow(extractedName);
+                }
+            });
+            
+            if (rowCounter === 0) {
+                alert('لم يتم العثور على أسماء صحيحة. تأكد من تنسيق البيانات');
+                return;
+            }
+            
+            textarea.value = '';
+            alert(`تم استخراج ${rowCounter} اسم بنجاح!`);
+        }
+
+        function addTableRow(name) {
+            rowCounter++;
+            const tbody = document.getElementById('table-body');
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+                <td>${rowCounter}</td>
+                <td><input type="text" value="${name}"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td><input type="number" min="0" value="0"></td>
+                <td><input type="number" min="0" value="0"></td>
+                <td><input type="number" min="0" value="0"></td>
+                <td><input type="number" min="0" value="0"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td class="check-cell" onclick="toggleCheck(this)"></td>
+                <td><input type="text"></td>
+            `;
+            
+            tbody.appendChild(row);
+        }
+
+        function toggleCheck(cell) {
+            const currentContent = cell.textContent.trim();
+            
+            if (currentContent === '') {
+                cell.textContent = '✅';
+                cell.style.backgroundColor = '#d4edda';
+            } else if (currentContent === '✅') {
+                cell.textContent = '❌';
+                cell.style.backgroundColor = '#f8d7da';
+            } else {
+                cell.textContent = '';
+                cell.style.backgroundColor = '';
+            }
+        }
+
+        function createPDFPage(names, startIndex, pageNumber) {
+            const educationDept = document.getElementById('education-dept').value;
+            const educationRegion = document.getElementById('education-region').value;
+            const schoolName = document.getElementById('school-name').value;
+            const monthValue = document.getElementById('month-input').value;
+            const signatureTitle = document.getElementById('signature-title').value;
+            const signatureName = document.getElementById('signature-name').value;
+            const genderText = currentGender === 'male' ? 'المعلم' : 'المعلمات';
+            const nameColumnHeader = currentGender === 'male' ? 'اسم المعلم' : 'اسم المعلمة';
+
+            const pageDiv = document.createElement('div');
+            pageDiv.className = 'pdf-page active';
+            
+            pageDiv.innerHTML = `
+                <div class="pdf-header">
+                    <div style="display: flex; flex-direction: column; gap: 5px; font-size: 10px;">
+                        <div>${educationDept}</div>
+                        <div>${educationRegion}</div>
+                        <div>${schoolName}</div>
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <img src="https://salogos.org/wp-content/uploads/2021/11/UntiTtled-1-1300x988.png" alt="شعار وزارة التعليم" style="width: 60px; height: auto;">
+                    </div>
+                </div>
+                
+                <div class="pdf-title">
+                    سجل متابعة ${genderText} للعام الدراسي خلال شهر ${monthValue}
+                </div>
+                
+                <table class="pdf-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="3" class="col-number">م</th>
+                            <th rowspan="3" class="col-name">${nameColumnHeader}</th>
+                            <th colspan="6" class="col-elearning">التعليم الإلكتروني (مدرستي)</th>
+                            <th colspan="5" class="col-commitment">معايير الالتزام الوظيفي</th>
+                            <th colspan="5" class="col-growth">معايير النمو المهني</th>
+                            <th colspan="7" class="col-achievement">متابعة التحصيل الدراسي</th>
+                            <th rowspan="3" class="col-signature">توقيع المعلم/ـة بالاطلاع</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="col-elearning-sub">تحضير الدروس</th>
+                            <th rowspan="2" class="col-elearning-sub">عدد الأنشطة</th>
+                            <th rowspan="2" class="col-elearning-sub">عدد الاختبارات</th>
+                            <th rowspan="2" class="col-elearning-sub">عدد الدروس المعدة</th>
+                            <th rowspan="2" class="col-elearning-sub">عدد الدروس غير المعدة</th>
+                            <th rowspan="2" class="col-commitment-sub">المحافظة على أوقات الدوام</th>
+                            <th rowspan="2" class="col-commitment-sub">الالتزام بزمن الحصص</th>
+                            <th rowspan="2" class="col-commitment-sub">المشاركة في الأنشطة والإذاعة</th>
+                            <th rowspan="2" class="col-commitment-sub">المحافظة على البيئة</th>
+                            <th rowspan="2" class="col-commitment-sub">التعاون وروح الفريق</th>
+                            <th rowspan="2" class="col-growth-sub">مجتمع مهني</th>
+                            <th rowspan="2" class="col-growth-sub">زيارة تبادلية</th>
+                            <th rowspan="2" class="col-growth-sub">ورشة عمل</th>
+                            <th rowspan="2" class="col-growth-sub">درس تطبيقي</th>
+                            <th rowspan="2" class="col-growth-sub">استراتيجيات</th>
+                            <th rowspan="2" class="col-achievement-sub">الاختبارات التشخيصية</th>
+                            <th rowspan="2" class="col-achievement-sub">تحليل النتائج</th>
+                            <th rowspan="2" class="col-achievement-sub">الخطط العلاجية</th>
+                            <th colspan="4" class="col-achievement-sub">تنوع أساليب التقويم</th>
+                        </tr>
+                        <tr>
+                            <th class="col-elearning-subsub" style="color: #1e3a5f;">ملائم للخطة</th>
+                            <th class="col-elearning-subsub" style="color: #1e3a5f;">مستوفي العناصر</th>
+                            <th class="col-achievement-subsub">اختبارات قصيرة</th>
+                            <th class="col-achievement-subsub">ملف الإنجاز</th>
+                            <th class="col-achievement-subsub">واجبات إضافية</th>
+                            <th class="col-achievement-subsub">مشاريع</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${names.map((name, index) => `
+                            <tr>
+                                <td>${startIndex + index + 1}</td>
+                                <td>${name}</td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td></td><td></td><td></td><td></td><td></td>
+                                <td></td><td></td><td></td><td></td><td></td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td></td>
+                            </tr>
+                        `).join('')}
+                        ${Array.from({length: Math.max(0, 20 - names.length)}, (_, i) => `
+                            <tr>
+                                <td>${startIndex + names.length + i + 1}</td>
+                                <td></td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td></td><td></td><td></td><td></td><td></td>
+                                <td></td><td></td><td></td><td></td><td></td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                
+                <div class="pdf-footer">
+                    <div style="text-align: center;">
+                        <div style="margin-bottom: 10px; font-weight: bold;">${signatureTitle}</div>
+                        <div style="border-bottom: 2px solid #333; width: 200px; padding-bottom: 5px;">${signatureName}</div>
+                    </div>
+                </div>
+            `;
+            
+            return pageDiv;
+        }
+
+        async function generatePDF() {
+            if (allNames.length === 0) {
+                alert('يرجى استخراج الأسماء أولاً');
+                return;
+            }
+
+            // Hide controls and show loading message
+            const controls = document.querySelector('.controls');
+            const originalDisplay = controls.style.display;
+            controls.style.display = 'none';
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                const pagesContainer = document.getElementById('pdf-pages-container');
+                pagesContainer.innerHTML = '';
+                pagesContainer.style.display = 'block';
+
+                // Create pages with 20 names each
+                const pages = [];
+                for (let i = 0; i < allNames.length; i += 20) {
+                    const pageNames = allNames.slice(i, i + 20);
+                    const pageDiv = createPDFPage(pageNames, i, Math.floor(i / 20) + 1);
+                    pagesContainer.appendChild(pageDiv);
+                    pages.push(pageDiv);
+                }
+
+                // Capture each page
+                for (let i = 0; i < pages.length; i++) {
+                    const pageDiv = pages[i];
+                    
+                    // Show only current page
+                    pages.forEach(p => p.style.display = 'none');
+                    pageDiv.style.display = 'block';
+
+                    // Wait for fonts and images to load
+                    await new Promise(resolve => setTimeout(resolve, 500));
+
+                    const canvas = await html2canvas(pageDiv, {
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: true,
+                        backgroundColor: '#ffffff',
+                        width: 1122, // A4 landscape width in pixels at 96 DPI * 2 for scale
+                        height: 794,  // A4 landscape height in pixels at 96 DPI * 2 for scale
+                        scrollX: 0,
+                        scrollY: 0
+                    });
+
+                    const imgData = canvas.toDataURL('image/png');
+                    
+                    if (i > 0) {
+                        pdf.addPage();
+                    }
+                    
+                    // Add image to fill entire page
+                    pdf.addImage(imgData, 'PNG', 0, 0, 297, 210);
+                }
+
+                // Clean up
+                pagesContainer.style.display = 'none';
+                pagesContainer.innerHTML = '';
+
+                // Generate filename
+                const monthValue = document.getElementById('month-input').value || 'الشهر';
+                const schoolName = document.getElementById('school-name').value || 'المدرسة';
+                const genderText = currentGender === 'male' ? 'المعلمين' : 'المعلمات';
+                const filename = `سجل_متابعة_${genderText}_${monthValue}_${schoolName}.pdf`;
+
+                pdf.save(filename);
+                alert('تم إنشاء ملف PDF بنجاح!');
+
+            } catch (error) {
+                console.error('خطأ في إنشاء PDF:', error);
+                alert('حدث خطأ في إنشاء ملف PDF. يرجى المحاولة مرة أخرى.');
+            } finally {
+                // Restore controls
+                controls.style.display = originalDisplay;
+                
+                // Clean up
+                const pagesContainer = document.getElementById('pdf-pages-container');
+                pagesContainer.style.display = 'none';
+                pagesContainer.innerHTML = '';
+            }
+        }
+
+        // Initialize with current month
+        window.onload = function() {
+            const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
+                          'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+            const currentMonth = new Date().getMonth();
+            document.getElementById('month-input').value = months[currentMonth];
+        };
+    </script>
+</body>
+</html>
+
